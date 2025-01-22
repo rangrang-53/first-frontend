@@ -1,0 +1,134 @@
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins/Poppins-BoldItalic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins/Poppins-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins/Poppins-MediumItalic.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins/Poppins-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins/Poppins-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* english font end*/
+
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../fonts/Noto_Sans_KR/NotoSansKR-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../fonts/Noto_Sans_KR/NotoSansKR-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../fonts/Noto_Sans_KR/NotoSansKR-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NotoSansKR";
+  src: url("../fonts/Noto_Sans_KR/NotoSansKR-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* korean font end */
+
+header {
+  width: 100%;
+  min-width: 1160px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header > div {
+  width: 150px;
+  height: 50px;
+  background-image: url(../images/change.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+header > div:hover {
+  cursor: pointer;
+}
+
+/* header end*/
+
+footer {
+  width: 100%;
+  min-width: 1160px;
+  height: 60px;
+  background-color: #8ccef3;
+  color: #ffffff;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* footer end*/
+
+main {
+  min-width: 1160px;
+  height: calc(100vh - 120px);
+}
+
+main > ul {
+  display: flex;
+  gap: 20px;
+}
+
+main > ul > li:nth-child(2)::after,
+main > ul > li:nth-child(3)::after,
+main > ul > li:nth-child(4)::after,
+main > ul > li:nth-child(5)::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 100%;
+  background-color: black;
+}
