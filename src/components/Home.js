@@ -18,7 +18,9 @@ function App() {
         </ul>
       </main>
 
-      <footer>Copyright ⓒ CLOTHESºC. All Rights Reserved.</footer>
+      <footer>
+        <p>Copyright ⓒ CLOTHESºC. All Rights Reserved.</p>
+      </footer>
     </div>
   );
 }

@@ -76,9 +76,6 @@ header {
   width: 100%;
   min-width: 1160px;
   height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 header > div {
@@ -88,6 +85,7 @@ header > div {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  margin: 0 auto 0 auto;
 }
 
 header > div:hover {
@@ -101,13 +99,19 @@ footer {
   min-width: 1160px;
   height: 60px;
   background-color: #8ccef3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+footer > p {
+  width: 100%;
+  min-width: 1160px;
+  height: 60px;
   color: #ffffff;
   font-family: Poppins;
   font-size: 14px;
   font-weight: 400;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* footer end*/
