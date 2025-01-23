@@ -25,14 +25,14 @@ footer {
   min-width: 1160px;
   height: 60px;
   background-color: #8ccef3;
-  display: flex; /* Flexbox 레이아웃 사용 */
-  justify-content: center; /* 수평 가운데 정렬 */
-  align-items: center; /* 수직 가운데 정렬 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 footer > div {
   width: 314px;
-  height: 50px;
+  height: 20px;
   color: #ffffff;
   font-family: Poppins;
   font-size: 14px;
@@ -45,20 +45,108 @@ footer > div {
 main {
   min-width: 1160px;
   height: calc(100vh - 120px);
+  padding: 24px 409px 40px 405px;
+  box-sizing: border-box;
 }
 
-main > ul {
+main > nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+main > nav > #menu {
+  display: flex;
+  gap: 10px;
+  padding: 0px 5px 0px 5px;
+  box-sizing: border-box;
+}
+
+main > nav > #menu > li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #5f5f5f;
+  font-family: NotoSans-KR;
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+}
+
+main > nav > #menu > li:nth-child(2),
+main > nav > #menu > li:nth-child(4),
+main > nav > #menu > li:nth-child(6),
+main > nav > #menu > li:nth-child(8) {
+  display: block;
+  width: 1px;
+  height: 100%;
+  background-color: #5f5f5f;
+}
+
+main > nav > #icon {
+  display: flex;
+  gap: 8px;
+}
+
+main > nav > #icon > li:nth-child(1),
+main > nav > #icon > li:nth-child(2),
+main > nav > #icon > li:nth-child(3) {
+  width: 24px;
+  height: 24px;
+  background-position: center;
+}
+
+main > nav > #icon > li:nth-child(1) {
+  background-image: url(../assets/icons/User_alt_light.png);
+}
+main > nav > #icon > li:nth-child(2) {
+  background-image: url(../assets/icons/Bag_alt_light.png);
+}
+main > nav > #icon > li:nth-child(3) {
+  background-image: url(../assets/icons/Search_light.png);
+}
+
+main > nav > #menu > li:nth-child(1),
+main > nav > #menu > li:nth-child(3),
+main > nav > #menu > li:nth-child(5),
+main > nav > #menu > li:nth-child(7),
+main > nav > #menu > li:nth-child(9),
+main > nav > #icon > li:hover {
+  cursor: pointer;
+}
+
+/* nav end */
+
+main > #vanner {
+  min-width: 1116px;
+  height: 304px;
+  background-image: url(../assets/images/vanner.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-bottom: 60px;
+}
+
+main > #vanner:hover {
+  cursor: pointer;
+}
+
+/* vanner end */
+
+main > .title {
   display: flex;
   gap: 20px;
 }
 
-main > ul > li:nth-child(2)::after,
-main > ul > li:nth-child(3)::after,
-main > ul > li:nth-child(4)::after,
-main > ul > li:nth-child(5)::after {
-  content: "";
-  display: block;
-  width: 1px;
-  height: 100%;
-  background-color: black;
+main > .title > li:nth-child(1) {
+  width: 3px;
+  height: 30px;
+  background-color: #30a6e9;
+}
+
+main > .title > li:nth-child(2) {
+  font-family: NotoSans-KR;
+  font-weight: bold;
+  font-size: 24px;
+  color: #5f5f5f;
 }
