@@ -25,19 +25,19 @@ footer {
   min-width: 1160px;
   height: 60px;
   background-color: #8ccef3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex; /* Flexbox 레이아웃 사용 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
 }
 
-footer > p {
-  width: 100%;
-  min-width: 1160px;
-  height: 60px;
+footer > div {
+  width: 314px;
+  height: 50px;
   color: #ffffff;
   font-family: Poppins;
   font-size: 14px;
   font-weight: 400;
+  margin: 0 auto 0 auto;
 }
 
 /* footer end*/

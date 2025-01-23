@@ -19,7 +19,7 @@ function App() {
       </main>
 
       <footer>
-        <p>Copyright ⓒ CLOTHESºC. All Rights Reserved.</p>
+        <div>Copyright ⓒ CLOTHESºC. All Rights Reserved.</div>
       </footer>
     </div>
   );
