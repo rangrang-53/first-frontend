@@ -2,16 +2,14 @@ header {
   width: 100%;
   min-width: 1160px;
   height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-header > div {
-  width: 150px;
-  height: 50px;
-  background-image: url(../assets/images/change.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  margin: 0 auto 0 auto;
+header img {
+  max-width: 150px;
+  height: auto;
 }
 
 header > div:hover {

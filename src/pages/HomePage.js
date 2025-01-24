@@ -1,15 +1,16 @@
 import React from "react";
-import { Link, Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Router, Link } from "react-router-dom";
+import login_icon from "../assets/icons/User_alt_light.png";
+import logo from "../assets/images/change.png";
 import "../styles/Home.css";
 import "../styles/reset.css";
-import LoginPage from "./LoginPage.js";
 
-function App() {
+const HomePage = () => {
   return (
-    <Router>
       <div>
         <header>
-          <div></div>
+        <Link to="/"><img src={logo} alt="로고"/>
+        </Link>
         </header>
 
         <main>
@@ -28,7 +29,8 @@ function App() {
 
             <ul id="icon">
               <li>
-                <Link to="/login"></Link>
+                <Link to="/login">
+                <img src={login_icon}></img></Link>
               </li>
               <li></li>
               <li></li>
@@ -192,11 +194,8 @@ function App() {
           <div id="text">Copyright ⓒ CLOTHESºC. All Rights Reserved.</div>
         </footer>
       </div>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-      </Routes>
-    </Router>
+      
   );
 }
 
-export default App;
+export default HomePage;

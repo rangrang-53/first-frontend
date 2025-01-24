@@ -1,10 +1,18 @@
+import React from "react";
+import { Router, Link } from "react-router-dom";
+import login_icon from "../assets/icons/User_alt_light.png";
+import logo from "../assets/images/change.png";
 import "../styles/Login.css";
 import "../styles/reset.css";
 
-function LoginPage() {
+const LoginPage = () => {
   return (
     <>
-      <header></header>
+      <header>
+        <Link to="/"><img src={logo} alt="로고"/>
+        </Link>
+      </header>
+
       <main>
         <nav>
           <ul id="menu">
@@ -20,7 +28,8 @@ function LoginPage() {
           </ul>
 
           <ul id="icon">
-            <li></li>
+            <li><Link to="/login">
+            <img src={login_icon}></img></Link></li>
             <li></li>
             <li></li>
           </ul>
