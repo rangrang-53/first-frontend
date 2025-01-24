@@ -1,0 +1,44 @@
+header {
+  width: 100%;
+  min-width: 1160px;
+  height: 60px;
+}
+
+header > div {
+  width: 150px;
+  height: 50px;
+  background-image: url(../assets/images/change.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 0 auto 0 auto;
+}
+
+header > div:hover {
+  cursor: pointer;
+}
+
+/* header end*/
+
+footer {
+  width: 100%;
+  min-width: 1160px;
+  height: 60px;
+  background-color: #8ccef3;
+  box-sizing: border-box;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+footer > #text {
+  width: 314px;
+  height: 20px;
+  color: #ffffff;
+  font-family: "Poppins", "sans-serif";
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+}
+
+/* footer end*/
