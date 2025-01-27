@@ -1,11 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import cart_icon from "../assets/icons/Bag_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
 import "../styles/Home.css";
 import "../styles/reset.css";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   return (
     <div>
       <header>
@@ -25,16 +27,16 @@ const HomePage = () => {
             <li></li>
             <li>반려동물</li>
             <li></li>
-            <li>EVENT</li>
+            <li onClick={() => navigate("/event")}>EVENT</li>
           </ul>
 
           <ul id="icon">
-            <li>
-              <Link to="/login">
-                <img src={login_icon}></img>
-              </Link>
+            <li onClick={() => navigate("/login")}>
+              <img src={login_icon} alt="로그인"></img>
             </li>
-            <li></li>
+            <li onClick={() => navigate("/cart")}>
+              <img src={cart_icon} alt="장바구니"></img>
+            </li>
             <li></li>
           </ul>
         </nav>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import cart_icon from "../assets/icons/Bag_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
 import "../styles/Login.css";
@@ -35,7 +36,11 @@ const LoginPage = () => {
                 <img src={login_icon}></img>
               </Link>
             </li>
-            <li></li>
+            <li>
+              <Link to="/cart">
+                <img src={cart_icon}></img>
+              </Link>
+            </li>
             <li></li>
           </ul>
         </nav>
