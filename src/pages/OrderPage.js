@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import cart_icon from "../assets/icons/Bag_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
-import "../styles/Cart.css";
+import "../styles/Order.css";
 import "../styles/reset.css";
 
-const CartPage = () => {
+const OrderPage = () => {
   const navigate = useNavigate();
   return (
     <>
@@ -41,16 +41,15 @@ const CartPage = () => {
           </ul>
         </nav>
 
-        <div id="cartPage_container">
-          <p>CART</p>
+        <div id="orderPage_container">
+          <p id="title">주문 / 결제</p>
+          <p className="subheading">주문 상품</p>
           <ul id="cartHeader">
-            <input type="checkbox"></input>
             <li>상품명</li>
             <li>수량</li>
             <li>가격</li>
           </ul>
           <ul className="product">
-            <input type="checkbox"></input>
             <li>
               <div id="image"></div>
             </li>
@@ -62,7 +61,8 @@ const CartPage = () => {
             <li>27,778원</li>
           </ul>
         </div>
-        <ul id="totalPrice">
+        <ul id="op_totalPrice">
+          <li>총 주문금액: </li>
           <li>27,778원</li>
           <li>+</li>
           <li>2,500원</li>
@@ -70,13 +70,28 @@ const CartPage = () => {
           <li>30,278원</li>
         </ul>
 
+        <div id="orderPage_container2">
+          <p id="title">배송 정보</p>
+          <div className="box">
+            <p>홍길동</p>
+            <p>010-1234-5678</p>
+            <p>서울시 강동구 천호동 12-123</p>
+          </div>
+          <p id="title">결제 정보</p>
+          <div className="box">
+            <input type="radio" id="cardPayment"></input>
+            <label for="cardPayment">카드 결제</label>
+            <input type="radio" id="easyPayment"></input>
+            <label for="easyPayment">간편 결제</label>
+            <input type="radio" id="bankPayment"></input>
+            <label for="bankPayment">무통장 입금</label>
+          </div>
+        </div>
+        <p id="title">개인정보 제공 동의</p>
+
         <div id="buttons">
-          <button>삭제하기</button>
-          <input
-            type="submit"
-            value={"결제하기"}
-            onClick={() => navigate("/order")}
-          ></input>
+          <button>취소하기</button>
+          <input type="submit" value={"결제하기"}></input>
         </div>
       </main>
       <footer>
@@ -86,4 +101,4 @@ const CartPage = () => {
   );
 };
 
-export default CartPage;
+export default OrderPage;

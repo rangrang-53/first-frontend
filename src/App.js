@@ -3,6 +3,7 @@ import CartPage from "./pages/CartPage.js";
 import EventPage from "./pages/EventPage.js";
 import HomePage from "./pages/HomePage.js";
 import LoginPage from "./pages/LoginPage.js";
+import OrderPage from "./pages/OrderPage.js";
 import SignupPage from "./pages/SignupPage.js";
 import "./styles/App.css";
 
@@ -14,6 +15,7 @@ function App() {
       <Route path="/signup" element={<SignupPage />}></Route>
       <Route path="/cart" element={<CartPage />}></Route>
       <Route path="/event" element={<EventPage />}></Route>
+      <Route path="/order" element={<OrderPage />}></Route>
     </Routes>
   );
 }
