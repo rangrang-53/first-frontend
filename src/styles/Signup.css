@@ -2,16 +2,14 @@ header {
   width: 100%;
   min-width: 1160px;
   height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-header > div {
-  width: 150px;
-  height: 50px;
-  background-image: url(../assets/images/change.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  margin: 0 auto 0 auto;
+header img {
+  max-width: 150px;
+  height: auto;
 }
 
 header > div:hover {
@@ -29,6 +27,7 @@ footer {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
+  margin-top: 180px;
 }
 
 footer > #text {
@@ -42,3 +41,341 @@ footer > #text {
 }
 
 /* footer end*/
+
+main {
+  width: 1160px;
+  min-width: 1160px;
+  min-height: calc(100vh - 120px);
+  margin: 0 auto 0 auto;
+  box-sizing: border-box;
+}
+
+main > nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+main > nav > #menu {
+  display: flex;
+  gap: 10px;
+  padding: 0px 5px 0px 5px;
+  box-sizing: border-box;
+}
+
+main > nav > #menu > li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #5f5f5f;
+  font-family: "NotoSansKR";
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+  line-height: 20px;
+}
+
+main > nav > #menu > li:nth-child(2),
+main > nav > #menu > li:nth-child(4),
+main > nav > #menu > li:nth-child(6),
+main > nav > #menu > li:nth-child(8) {
+  display: block;
+  width: 1px;
+  height: 100%;
+  background-color: #5f5f5f;
+}
+
+main > nav > #icon {
+  display: flex;
+  gap: 8px;
+}
+
+main > nav > #icon > li:nth-child(1),
+main > nav > #icon > li:nth-child(2),
+main > nav > #icon > li:nth-child(3) {
+  width: 24px;
+  height: 24px;
+  background-position: center;
+}
+
+main > nav > #icon > li:nth-child(2) {
+  background-image: url(../assets/icons/Bag_alt_light.png);
+}
+main > nav > #icon > li:nth-child(3) {
+  background-image: url(../assets/icons/Search_light.png);
+}
+
+main > nav > #menu > li:nth-child(1),
+main > nav > #menu > li:nth-child(3),
+main > nav > #menu > li:nth-child(5),
+main > nav > #menu > li:nth-child(7),
+main > nav > #menu > li:nth-child(9),
+main > nav > #icon > li:hover {
+  cursor: pointer;
+}
+
+/* nav end */
+
+main > #signupPage_container {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+main > #signupPage_container > #sp_login_container {
+  background-color: rgba(140, 206, 243, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 652px;
+  height: 572px;
+  margin-top: 196px;
+  margin-bottom: 148px;
+  padding: 29px 18px 0px 19px;
+  gap: 33px;
+  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  filter: blur(3px);
+  cursor: pointer;
+}
+
+main > #signupPage_container > #sp_login_container > p {
+  font-family: "NotoSansKR";
+  font-size: 28px;
+  font-weight: 500;
+  color: #5f5f5f;
+  line-height: 20px;
+}
+
+main > #signupPage_container > #sp_login_container > .box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+main > #signupPage_container > #sp_login_container > .box > input[type="text"] {
+  width: 546px;
+  height: 69px;
+  border-radius: 10px;
+  border: 1px solid #c9c9c9;
+  outline: none;
+  box-shadow: none;
+  text-indent: 50px;
+  font-family: "NotoSansKR";
+  font-size: 14px;
+  color: #5f5f5f;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+main
+  > #signupPage_container
+  > #sp_login_container
+  > .box
+  > input[type="text"]:nth-child(1) {
+  background-image: url(../assets/icons/User_alt_light.png);
+  background-repeat: no-repeat;
+  background-position-x: 16px;
+  background-position-y: 22.5px;
+}
+
+main
+  > #signupPage_container
+  > #sp_login_container
+  > .box
+  > input[type="text"]:nth-child(2) {
+  background-image: url(../assets/icons/Lock_alt_light.png);
+  background-repeat: no-repeat;
+  background-position-x: 16px;
+  background-position-y: 22.5px;
+}
+
+main > #signupPage_container > #sp_login_container > .buttons {
+  display: flex;
+  gap: 20px;
+  position: absolute;
+  right: 19px;
+  bottom: 240px;
+}
+
+main > #signupPage_container > #sp_login_container > .buttons > button {
+  width: 80px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(95, 95, 95, 0.5);
+  font-family: "NotoSansKR";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+main
+  > #signupPage_container
+  > #sp_login_container
+  > .buttons
+  > input[type="submit"] {
+  width: 80px;
+  height: 40px;
+  border-radius: 10px;
+  border: 0px;
+  background-color: #8ccef3;
+  font-family: "NotoSansKR";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  outline: none;
+}
+
+/* login end */
+
+main > #signupPage_container > #sp_signup_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 583px;
+  height: 540px;
+  border: 1px solid #8ccef3;
+  background-color: white;
+  margin-bottom: 180px;
+  padding: 29px 18px 0px 19px;
+  gap: 33px;
+  position: relative;
+  position: absolute;
+  top: 150px;
+  left: 352px;
+  z-index: 2;
+}
+
+main > #signupPage_container > #sp_signup_container > p {
+  font-family: "NotoSansKR";
+  font-size: 28px;
+  font-weight: 500;
+  color: #5f5f5f;
+  line-height: 20px;
+}
+
+main > #signupPage_container > #sp_signup_container > .box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+main
+  > #signupPage_container
+  > #sp_signup_container
+  > .box
+  > input[type="text"] {
+  width: 546px;
+  height: 69px;
+  border-radius: 10px;
+  border: 1px solid #c9c9c9;
+  outline: none;
+  box-shadow: none;
+  text-indent: 50px;
+  font-family: "NotoSansKR";
+  font-size: 14px;
+  color: #5f5f5f;
+  font-weight: 400;
+}
+
+main
+  > #signupPage_container
+  > #sp_signup_container
+  > .box
+  > input[type="text"]:nth-child(1) {
+  background-image: url(../assets/icons/User_alt_light.png);
+  background-repeat: no-repeat;
+  background-position-x: 16px;
+  background-position-y: 22.5px;
+}
+
+main
+  > #signupPage_container
+  > #sp_signup_container
+  > .box
+  > input[type="text"]:nth-child(2) {
+  background-image: url(../assets/icons/Lock_alt_light.png);
+  background-repeat: no-repeat;
+  background-position-x: 16px;
+  background-position-y: 22.5px;
+}
+
+main
+  > #signupPage_container
+  > #sp_signup_container
+  > .box
+  > input[type="text"]:nth-child(3) {
+  background-image: url(../assets/icons/Lock_alt_light.png);
+  background-repeat: no-repeat;
+  background-position-x: 16px;
+  background-position-y: 22.5px;
+}
+
+main
+  > #signupPage_container
+  > #sp_signup_container
+  > .box
+  > input[type="text"]:nth-child(4) {
+  background-image: url(../assets/icons/File_light.png);
+  background-repeat: no-repeat;
+  background-position-x: 16px;
+  background-position-y: 22.5px;
+}
+
+main
+  > #signupPage_container
+  > #sp_signup_container
+  > .box
+  > input[type="text"]:focus {
+  border: 1px solid #5f5f5f;
+}
+
+main > #signupPage_container > #sp_signup_container > .buttons {
+  display: flex;
+  gap: 20px;
+  position: absolute;
+  right: 37px;
+  bottom: 48px;
+}
+
+main > #signupPage_container > #sp_signup_container > .buttons > button {
+  width: 80px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(95, 95, 95, 0.5);
+  font-family: "NotoSansKR";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+main
+  > #signupPage_container
+  > #sp_signup_container
+  > .buttons
+  > input[type="submit"] {
+  width: 80px;
+  height: 40px;
+  border-radius: 10px;
+  border: 0px;
+  background-color: #8ccef3;
+  font-family: "NotoSansKR";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  outline: none;
+}
+
+main > #signupPage_container > #sp_signup_container > .buttons > button,
+main
+  > #signupPage_container
+  > #sp_signup_container
+  > .buttons
+  > input[type="submit"]
+  :hover {
+  cursor: pointer;
+}
