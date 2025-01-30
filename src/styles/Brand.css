@@ -168,3 +168,284 @@ header {
     color: #5f5f5f;
     word-wrap: break-word;
   }
+
+  /* bp_header */
+
+  main > .title {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 19px;
+  }
+  
+  main > .title > li:nth-child(1) {
+    width: 3px;
+    height: 30px;
+    background-color: #30a6e9;
+  }
+  
+  main > .title > li:nth-child(2) {
+    font-family: "NotoSansKR";
+    font-weight: bold;
+    font-size: 24px;
+    color: #5f5f5f;
+    line-height: 20px;
+  }
+  
+  main > #bp_container {
+    width: 1116px;
+    height: 350px;
+    display: flex;
+    overflow: visible;
+    margin-bottom: 60px;
+  }
+  
+  main > #bp_container > #bp_box1 {
+    width: 1116px;
+    height: 350px;
+    background-color: rgba(113, 196, 239, 0.2);
+    border-radius: 10px;
+  }
+  
+  main > #bp_container > #bp_box1 > #container {
+    display: flex;
+    box-sizing: border-box;
+    padding: 32px 34px 14px 48px;
+    gap: 22px;
+  }
+  main > #bp_container > #bp_box1 > #container > .item {
+    display: flex;
+    flex-direction: column;
+    width: 150px;
+    gap: 8px;
+  }
+  
+  main > #bp_container > #bp_box1 > #container > .item > .brand_name,
+  main > #bp_container > #bp_box1 > #container > .item > .product_name,
+  main > #bp_container > #bp_box1 > #container > .item > .image:hover {
+    cursor: pointer;
+  }
+  
+  main > #bp_container > #bp_box1 > #container > .item > .image {
+    width: 150px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+  }
+  
+  main
+    > #bp_container
+    > #bp_box1
+    > #container
+    > .item:nth-child(1)
+    > .image {
+    background-image: url(../assets/images/11ee47d96180f2e58a697f0b9fa51588.jpg);
+  }
+  
+  main
+    > #bp_container
+    > #bp_box1
+    > #container
+    > .item:nth-child(2)
+    > .image {
+    background-image: url(../assets/images/11ef9a4bded7e457ba523d0ea73db55a.jpg);
+  }
+  
+  main
+    > #bp_container
+    > #bp_box1
+    > #container
+    > .item:nth-child(3)
+    > .image {
+    background-image: url(../assets/images/11ee68e334aa87818a7fa997f7caae56.jpg);
+  }
+  
+  main
+    > #bp_container
+    > #bp_box1
+    > #container
+    > .item:nth-child(4)
+    > .image {
+    background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
+  }
+
+  main
+  > #bp_container
+  > #bp_box1
+  > #container
+  > .item:nth-child(5)
+  > .image {
+  background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
+}
+
+main
+  > #bp_container
+  > #bp_box1
+  > #container
+  > .item:nth-child(6)
+  > .image {
+  background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
+}
+  
+  main > #bp_container > #bp_box1 > #container > .item > .product_name {
+    font-family: "NotoSansKR";
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 20px;
+    color: #1d1c1c;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  
+  main
+    > #bp_container
+    > #bp_box1
+    > #container
+    > .item
+    > .price_container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  main
+    > #bp_container
+    > #bp_box1
+    > #container
+    > .item
+    > .price_container
+    > .discount {
+    font-family: "NotoSansKR";
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 20px;
+    color: #ca090c;
+  }
+  
+  main
+    > #bp_container
+    > #bp_box1
+    > #container
+    > .item
+    > .price_container
+    > .price {
+    font-family: "NotoSansKR";
+    font-size: 14px;
+    font-weight: 400px;
+    line-height: 20px;
+    color: #5f5f5f;
+  }
+
+  /* box 1 end */
+
+  main > #bp_box2 {
+    width: 1116px;
+    height: 350px;
+    display: flex;
+    overflow: visible;
+    margin-bottom: 60px;
+    background-color: rgba(113, 196, 239, 0.2);
+    border-radius: 10px;
+  }
+  
+  main > #bp_box2 > #container {
+    display: flex;
+    box-sizing: border-box;
+    padding: 32px 34px 14px 48px;
+    gap: 22px;
+  }
+  main > #bp_box2 > #bp_box2 > #container > .item {
+    display: flex;
+    flex-direction: column;
+    width: 150px;
+    gap: 8px;
+  }
+  
+  main > #bp_box2 > #bp_box2 > #container >  .item > .brand_name,
+  main > #bp_box2 > #bp_box2 > #container >  .item > .product_name,
+  main > #bp_box2 > #bp_box2 > #container >  .item > .image:hover {
+    cursor: pointer;
+  }
+  
+  main > #bp_box2 > #bp_box2 > #container >  .item > .image {
+    width: 150px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+  }
+  
+  main
+  > #bp_box2 > #bp_box2 > #container
+    > .item:nth-child(1)
+    > .image {
+    background-image: url(../assets/images/11ee47d96180f2e58a697f0b9fa51588.jpg);
+  }
+  
+  main > #bp_box2 > #bp_box2 > #container
+    > .item:nth-child(2)
+    > .image {
+    background-image: url(../assets/images/11ef9a4bded7e457ba523d0ea73db55a.jpg);
+  }
+  
+  main > #bp_box2 > #bp_box2 > #container
+    > .item:nth-child(3)
+    > .image {
+    background-image: url(../assets/images/11ee68e334aa87818a7fa997f7caae56.jpg);
+  }
+  
+  main > #bp_box2 > #bp_box2 > #container
+    > .item:nth-child(4)
+    > .image {
+    background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
+  }
+
+  main > #bp_box2 > #bp_box2 > #container
+  > .item:nth-child(5)
+  > .image {
+  background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
+}
+
+main > #bp_box2 > #bp_box2 > #container
+  > .item:nth-child(6)
+  > .image {
+  background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
+}
+  
+main > #bp_box2 > #bp_box2 > #container> .item > .product_name {
+    font-family: "NotoSansKR";
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 20px;
+    color: #1d1c1c;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  
+  main > #bp_box2 > #bp_box2 > #container
+    > .item
+    > .price_container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  main > #bp_box2 > #bp_box2 > #container
+    > .item
+    > .price_container
+    > .discount {
+    font-family: "NotoSansKR";
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 20px;
+    color: #ca090c;
+  }
+  
+  main > #bp_box2 > #bp_box2 > #container
+    > .item
+    > .price_container
+    > .price {
+    font-family: "NotoSansKR";
+    font-size: 14px;
+    font-weight: 400px;
+    line-height: 20px;
+    color: #5f5f5f;
+  }
