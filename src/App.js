@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage.js";
 import OrderPage from "./pages/OrderPage.js";
 import SignupPage from "./pages/SignupPage.js";
 import "./styles/App.css";
+import BrandPage from "./pages/BrandPage.js";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/cart" element={<CartPage />}></Route>
       <Route path="/event" element={<EventPage />}></Route>
       <Route path="/order" element={<OrderPage />}></Route>
+      <Route path="/brand" element={<BrandPage />}></Route>
     </Routes>
   );
 }

@@ -229,3 +229,80 @@ main > #op_totalPrice > li:nth-child(4),
 main > #op_totalPrice > li:nth-child(5) {
   color: #5f5f5f;
 }
+
+main > #orderPage_container2 {
+  display: flex;
+  gap:24px;
+  margin-top: 232px;
+}
+
+main > #orderPage_container2 > .orderPage_container2_box {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 549px;
+  height: 159px;
+}
+
+main > #orderPage_container2 > .orderPage_container2_box > .title {
+  font-family: "NotoSansKR";
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #5f5f5f;
+}
+
+main > #orderPage_container2 > .orderPage_container2_box > .box {
+  border: 1px solid #5f5f5f;
+  padding: 16px 19px 16px 19px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  gap: 20px;
+  font-family: "NotoSansKR";
+  color: #5f5f5f;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+main > #orderPage_container2 > .orderPage_container2_box:nth-child(2) > .box > .inputs{
+  flex-direction: row;
+  gap:4px;
+  font-family: "NotoSansKR";
+  color: #5f5f5f;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+main > #agree_container {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+main > #agree_container > #agree1, main> #agree_container> #agree2 {
+  display: flex;
+  gap:10px;
+  font-family: "NotoSansKR";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+main > #agree_container > .title {
+  font-family: "NotoSansKR";
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #5f5f5f;
+}
+
+main > #agree_container > #agree1 > span {
+  font-size: 12px;
+  font-weight: 300;
+  cursor: pointer;
+}

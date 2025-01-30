@@ -179,7 +179,7 @@ const HomePage = () => {
           <li>1월의 브랜드</li>
         </ul>
         <div id="this_brand">
-          <div id="lookbook">
+          <div id="lookbook" onClick={() => navigate("/brand")}>
             <div id="brand_name">
               <p>론론</p>
               <p>RONRON. 2024 WINTER</p>

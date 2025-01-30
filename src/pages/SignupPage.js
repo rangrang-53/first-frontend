@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import cart_icon from "../assets/icons/Bag_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
 import "../styles/Signup.css";
@@ -32,10 +33,14 @@ const SignupPage = () => {
           <ul id="icon">
             <li>
               <Link to="/login">
-                <img src={login_icon}></img>
+                <img src={login_icon} alt="로그인"></img>
               </Link>
             </li>
-            <li></li>
+            <li>
+            <Link to="/cart">
+                <img src={cart_icon} alt="장바구니"></img>
+              </Link>
+            </li>
             <li></li>
           </ul>
         </nav>

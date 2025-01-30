@@ -33,12 +33,12 @@ const LoginPage = () => {
           <ul id="icon">
             <li>
               <Link to="/login">
-                <img src={login_icon}></img>
+                <img src={login_icon} alt="로그인"></img>
               </Link>
             </li>
             <li>
               <Link to="/cart">
-                <img src={cart_icon}></img>
+                <img src={cart_icon} alt="장바구니"></img>
               </Link>
             </li>
             <li></li>
