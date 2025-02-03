@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import cart_icon from "../assets/icons/Bag_alt_light.png";
-import star_icon from "../assets/icons/Star_light.png";
+import lock_icon from "../assets/icons/Lock_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
-import "../styles/Product.css";
+import "../styles/ProductQnA.css";
 import "../styles/reset.css";
 
-const ProductPage4 = () => {
+const ProductPage4QnA = () => {
   const navigate = useNavigate();
   const [selectedColor, setSelectedColor] = useState("yellow");
   const [quantity, setQuantity] = useState(1);
@@ -16,7 +16,6 @@ const ProductPage4 = () => {
   const discountedPrice = originalPrice - originalPrice * discountRate;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [rating, setRating] = useState(0);
 
   const handleColorChange = (event) => {
     setSelectedColor(event.target.value);
@@ -43,41 +42,6 @@ const ProductPage4 = () => {
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen); // 팝업 상태 토글
   };
-
-  const handleStarClick = (index) => {
-    setRating(index + 1); // 클릭한 별을 포함한 그 이전 별까지 활성화
-  };
-
-  const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(false);
-  const [selectedReview, setSelectedReview] = useState(null);
-
-  const handleReviewClick = (review) => {
-    setSelectedReview(review);
-    setIsReviewPopupOpen(true);
-  };
-
-  const closeReviewPopup = () => {
-    setIsReviewPopupOpen(false);
-    setSelectedReview(null);
-  };
-
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      rating: 5,
-      title: "너무 따뜻해요",
-      content: "목이 정말 따뜻하고 포근해요! 겨울 필수템입니다.",
-      writer: "abcd1234",
-      date: formattedDate,
-    },
-    {
-      id: 2,
-      rating: 4,
-      title: "색깔이 예뻐요",
-      content: "색상이 화면과 똑같고 고급스러워요.",
-      date: formattedDate,
-    },
-  ]);
 
   return (
     <div>
@@ -153,33 +117,75 @@ const ProductPage4 = () => {
           <input type="submit" value={"바로 구매"}></input>
         </div>
 
-        <div id="product_header">
+        <div id="qna_header">
           <p onClick={() => navigate("/product/4")}>REVIEW</p>
           <p>/</p>
           <p onClick={() => navigate("/product/4/qna")}>Q&A</p>
         </div>
 
-        <div id="review_container">
-          {reviews.map((review) => (
-            <div
-              className="review"
-              key={review.id}
-              onClick={() => handleReviewClick(review)}
-            >
-              <div className="review_star">
-                {[...Array(review.rating)].map((_, i) => (
-                  <img key={i} src={star_icon} alt="평점" />
-                ))}
-              </div>
-              <div className="review_title">{review.title}</div>
-              <div className="review_information">
-                <p>{review.date}</p>
-                <div className="review_image"></div>
-              </div>
+        <div id="qna_container">
+          <div className="qna">
+            <p className="qna_category">{"[상품문의]"}</p>
+
+            <div className="qna_title">
+              <img src={lock_icon} alt="자물쇠"></img>비밀글입니다.
             </div>
-          ))}
+            <div className="qna_information">
+              <p>{formattedDate}</p>
+              <p className="writer_id">abc****</p>
+            </div>
+          </div>
+
+          <div className="qna">
+            <p className="qna_category">{"[상품문의]"}</p>
+
+            <div className="qna_title">
+              <img src={lock_icon} alt="자물쇠"></img>비밀글입니다.
+            </div>
+            <div className="qna_information">
+              <p>{formattedDate}</p>
+              <p className="writer_id">abc****</p>
+            </div>
+          </div>
+
+          <div className="qna">
+            <p className="qna_category">{"[상품문의]"}</p>
+
+            <div className="qna_title">
+              <img src={lock_icon} alt="자물쇠"></img>비밀글입니다.
+            </div>
+            <div className="qna_information">
+              <p>{formattedDate}</p>
+              <p className="writer_id">abc****</p>
+            </div>
+          </div>
+
+          <div className="qna">
+            <p className="qna_category">{"[상품문의]"}</p>
+
+            <div className="qna_title">
+              <img src={lock_icon} alt="자물쇠"></img>비밀글입니다.
+            </div>
+            <div className="qna_information">
+              <p>{formattedDate}</p>
+              <p className="writer_id">abc****</p>
+            </div>
+          </div>
+
+          <div className="qna">
+            <p className="qna_category">{"[상품문의]"}</p>
+
+            <div className="qna_title">
+              <img src={lock_icon} alt="자물쇠"></img>비밀글입니다.
+            </div>
+            <div className="qna_information">
+              <p>{formattedDate}</p>
+              <p className="writer_id">abc****</p>
+            </div>
+          </div>
 
           <button onClick={togglePopup}>작성하기</button>
+
           <div id="page">
             <div className="pageNumber">{"<"}</div>
             <div className="pageNumber">1</div>
@@ -206,21 +212,14 @@ const ProductPage4 = () => {
             </div>
 
             <div className="content_flex">
-              <p>별점</p>
-              <div>
-                {[...Array(5)].map((_, index) => (
-                  <img
-                    key={index}
-                    src={star_icon}
-                    alt="별점"
-                    onClick={() => handleStarClick(index)}
-                    style={{
-                      cursor: "pointer",
-                      opacity: index < rating ? 1 : 0.5, // 클릭된 별은 진하게, 나머지는 흐리게
-                    }}
-                  />
-                ))}
-              </div>
+              <p>카테고리</p>
+              <select name="category">
+                <option value="qna_product">상품문의</option>
+                <option value="qna_delivery">배송문의</option>
+                <option value="qna_etc">기타문의</option>
+              </select>
+              <p>비밀번호</p>
+              <input type="password"></input>
             </div>
 
             <div className="content_flex">
@@ -241,28 +240,6 @@ const ProductPage4 = () => {
         </div>
       )}
 
-      {isReviewPopupOpen && selectedReview && (
-        <div className="popup">
-          <div className="review_popup-content">
-            <div className="review_image"></div>
-            <div className="review_text">
-              <p className="review_title">{selectedReview.title}</p>
-              <div className="review_star">
-                {[...Array(selectedReview.rating)].map((_, i) => (
-                  <img key={i} src={star_icon} alt="별점" />
-                ))}
-                <p className="review_writer">{selectedReview.writer}</p>
-                <p className="review_date">{selectedReview.date}</p>
-              </div>
-              <p className="review_content">{selectedReview.content}</p>
-            </div>
-            <button onClick={closeReviewPopup} className="close_button">
-              닫기
-            </button>
-          </div>
-        </div>
-      )}
-
       <footer>
         <div id="text">Copyright ⓒ CLOTHESºC. All Rights Reserved.</div>
       </footer>
@@ -270,4 +247,4 @@ const ProductPage4 = () => {
   );
 };
 
-export default ProductPage4;
+export default ProductPage4QnA;

@@ -216,7 +216,7 @@ const HomePage = () => {
                 </p>
                 <ul className="price_container">
                   <span className="discount">27%</span>
-                  <span className="price">27,778원</span>
+                  <span className="price">27,740원</span>
                 </ul>
               </li>
             </ul>

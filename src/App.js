@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage.js";
 import LoginPage from "./pages/LoginPage.js";
 import OrderPage from "./pages/OrderPage.js";
 import ProductPage4 from "./pages/ProductPage4.js";
+import ProductPage4QnA from "./pages/ProductPage4QnA.js";
 import SignupPage from "./pages/SignupPage.js";
 import "./styles/App.css";
 
@@ -20,6 +21,7 @@ function App() {
       <Route path="/order" element={<OrderPage />}></Route>
       <Route path="/brand" element={<BrandPage />}></Route>
       <Route path="/product/4" element={<ProductPage4 />}></Route>
+      <Route path="/product/4/qna" element={<ProductPage4QnA />}></Route>
     </Routes>
   );
 }
