@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import cart_icon from "../assets/icons/Bag_alt_light.png";
 import star_icon from "../assets/icons/Star_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
@@ -8,6 +9,35 @@ import "../styles/Product.css";
 import "../styles/reset.css";
 
 const ProductPage4 = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
+  const [isReviewButtonDisabled, setIsReviewButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    setIsLoggedIn(!!token);
+    setIsReviewButtonDisabled(!token);
+  }, []);
+
+  const loginUser = async (loginData) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/login",
+        loginData,
+        {
+          withCredentials: true, // 세션 쿠키를 보내기 위한 설정
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("로그인 성공!");
+        setIsLoggedIn(true); // 로그인 상태 갱신
+        setIsReviewButtonDisabled(false);
+      }
+    } catch (error) {
+      console.error("로그인 실패:", error);
+    }
+  };
+
   const navigate = useNavigate();
   const [selectedColor, setSelectedColor] = useState("yellow");
   const [quantity, setQuantity] = useState(1);
@@ -17,6 +47,32 @@ const ProductPage4 = () => {
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [rating, setRating] = useState(0);
+
+  const [reviewTitle, setReviewTitle] = useState("");
+  const [reviewContent, setReviewContent] = useState("");
+  const { productUid } = useParams();
+
+  const [reviewImage, setReviewImage] = useState(null);
+
+  const [reviews, setReviews] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const reviewsPerPage = 10;
+
+  const [userUid, setUserUid] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setReviewImage(file);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleColorChange = (event) => {
     setSelectedColor(event.target.value);
@@ -61,23 +117,126 @@ const ProductPage4 = () => {
     setSelectedReview(null);
   };
 
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      rating: 5,
-      title: "너무 따뜻해요",
-      content: "목이 정말 따뜻하고 포근해요! 겨울 필수템입니다.",
-      writer: "abcd1234",
-      date: formattedDate,
-    },
-    {
-      id: 2,
-      rating: 4,
-      title: "색깔이 예뻐요",
-      content: "색상이 화면과 똑같고 고급스러워요.",
-      date: formattedDate,
-    },
-  ]);
+  const fetchReviews = async (page) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/review/${productUid}`,
+        {
+          params: { page: page - 1, size: reviewsPerPage },
+        }
+      );
+      console.log(response.data);
+      setReviews(response.data.reviews);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("서버와 연결할 수 없습니다.");
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews(currentPage);
+  }, [currentPage]);
+
+  useEffect(() => {
+    console.log("Fetched totalPages:", totalPages); // totalPages 값 확인
+  }, [totalPages]);
+
+  useEffect(() => {
+    console.log("currentPage:", currentPage);
+    console.log("totalPages:", totalPages);
+    fetchReviews(currentPage);
+  }, [currentPage, totalPages]);
+
+  const handlePageClick = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSubmitReview = async () => {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login"); // 로그인 페이지로 리디렉션
+      return;
+    }
+
+    if (!reviewTitle || !reviewContent || rating === 0) {
+      alert("제목, 내용, 별점을 모두 작성해 주세요.");
+      return;
+    }
+
+    const reviewData = {
+      title: reviewTitle,
+      content: reviewContent,
+      rating: rating,
+      productDTO: { uid: productUid },
+      image: reviewImage ? reviewImage : null,
+    };
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/review/${productUid}`,
+        reviewData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      setReviews((prevReviews) => [...prevReviews, response.data]);
+      setIsPopupOpen(false);
+      setReviewTitle("");
+      setReviewContent("");
+      setRating(0);
+      setReviewImage(null);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("서버와 연결할 수 없습니다.");
+    }
+  };
+
+  const handleEditReview = async () => {
+    const updatedReviewData = {
+      title: reviewTitle,
+      content: reviewContent,
+      rating: rating,
+    };
+
+    try {
+      await axios.patch(
+        `http://localhost:8080/review/${productUid}/${selectedReview.id}`,
+        updatedReviewData
+      );
+      setReviews(
+        reviews.map((review) =>
+          review.id === selectedReview.id
+            ? { ...review, ...updatedReviewData }
+            : review
+        )
+      );
+      setIsReviewPopupOpen(false);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("서버와 연결할 수 없습니다.");
+    }
+  };
+
+  const handleDeleteReview = async (reviewUid) => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/review/${productUid}/${reviewUid}`
+      );
+      setReviews(reviews.filter((review) => review.Uid !== reviewUid));
+    } catch (error) {
+      console.error("Error:", error);
+      alert("서버와 연결할 수 없습니다.");
+    }
+  };
 
   return (
     <div>
@@ -160,39 +319,64 @@ const ProductPage4 = () => {
         </div>
 
         <div id="review_container">
-          {reviews.map((review) => (
-            <div
-              className="review"
-              key={review.id}
-              onClick={() => handleReviewClick(review)}
-            >
-              <div className="review_star">
-                {[...Array(review.rating)].map((_, i) => (
-                  <img key={i} src={star_icon} alt="평점" />
-                ))}
+          {reviews && reviews.length > 0 ? (
+            reviews.map((review) => (
+              <div
+                className="review"
+                key={review.uid}
+                onClick={() => handleReviewClick(review)}
+              >
+                <div className="review_star">
+                  {[...Array(review.rating)].map((_, i) => (
+                    <img key={i} src={star_icon} alt="평점" />
+                  ))}
+                </div>
+                <div className="review_title">{review.title}</div>
+                <div className="review_information">
+                  <p>{review.date}</p>
+                </div>
               </div>
-              <div className="review_title">{review.title}</div>
-              <div className="review_information">
-                <p>{review.date}</p>
-                <div className="review_image"></div>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>리뷰가 없습니다.</p>
+          )}
 
-          <button onClick={togglePopup}>작성하기</button>
+          <button onClick={togglePopup} disabled={isReviewButtonDisabled}>
+            작성하기
+          </button>
           <div id="page">
-            <div className="pageNumber">{"<"}</div>
-            <div className="pageNumber">1</div>
-            <div className="pageNumber">2</div>
-            <div className="pageNumber">3</div>
-            <div className="pageNumber">4</div>
-            <div className="pageNumber">5</div>
-            <div className="pageNumber">6</div>
-            <div className="pageNumber">7</div>
-            <div className="pageNumber">8</div>
-            <div className="pageNumber">9</div>
-            <div className="pageNumber">10</div>
-            <div className="pageNumber">{">"}</div>
+            {totalPages > 0 && (
+              <div id="page">
+                <div
+                  className="pageNumber"
+                  onClick={() => handlePageClick(currentPage - 1)}
+                  style={{
+                    cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {"<"}
+                </div>
+                {[...Array(totalPages)].map((_, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handlePageClick(index + 1)}
+                    className={currentPage === index + 1 ? "active" : ""}
+                  >
+                    {index + 1}
+                  </div>
+                ))}
+                <div
+                  className="pageNumber"
+                  onClick={() => handlePageClick(currentPage + 1)}
+                  style={{
+                    cursor:
+                      currentPage === totalPages ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {">"}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </main>
@@ -202,7 +386,12 @@ const ProductPage4 = () => {
           <div className="popup-content">
             <div className="content_flex">
               <p>제목</p>
-              <input type="text" placeholder="제목"></input>
+              <input
+                type="text"
+                placeholder="제목"
+                value={reviewTitle}
+                onChange={(e) => setReviewTitle(e.target.value)}
+              ></input>
             </div>
 
             <div className="content_flex">
@@ -225,17 +414,25 @@ const ProductPage4 = () => {
 
             <div className="content_flex">
               <p>내용</p>
-              <textarea placeholder="내용"></textarea>
+              <textarea
+                placeholder="내용"
+                value={reviewContent}
+                onChange={(e) => setReviewContent(e.target.value)}
+              ></textarea>
             </div>
 
             <div className="content_flex">
               <p>이미지 첨부</p>
-              <input type="file"></input>
+              <input type="file" onChange={handleImageChange}></input>
             </div>
 
             <div className="popup_buttons">
               <button onClick={togglePopup}>취소</button>
-              <input type="submit" value={"등록"}></input>
+              <input
+                type="submit"
+                value={"등록"}
+                onClick={handleSubmitReview}
+              ></input>
             </div>
           </div>
         </div>

@@ -153,7 +153,12 @@ main > #loginPage_container > #lp_login_container > .box {
   gap: 20px;
 }
 
-main > #loginPage_container > #lp_login_container .box > input[type="text"] {
+main > #loginPage_container > #lp_login_container .box > input[type="text"],
+main
+  > #loginPage_container
+  > #lp_login_container
+  .box
+  > input[type="password"] {
   width: 546px;
   height: 69px;
   border-radius: 10px;
@@ -182,7 +187,7 @@ main
   > #loginPage_container
   > #lp_login_container
   .box
-  > input[type="text"]:nth-child(2) {
+  > input[type="password"] {
   background-image: url(../assets/icons/Lock_alt_light.png);
   background-repeat: no-repeat;
   background-position-x: 16px;
@@ -276,7 +281,12 @@ main > #loginPage_container > #lp_signup_container > .box {
   gap: 20px;
 }
 
-main > #loginPage_container > #lp_signup_container .box > input[type="text"] {
+main > #loginPage_container > #lp_signup_container .box > input[type="text"],
+main
+  > #loginPage_container
+  > #lp_signup_container
+  .box
+  > input[type="password"] {
   width: 546px;
   height: 69px;
   border-radius: 10px;
@@ -306,7 +316,7 @@ main
   > #loginPage_container
   > #lp_signup_container
   .box
-  > input[type="text"]:nth-child(2) {
+  > input[type="password"] {
   background-image: url(../assets/icons/Lock_alt_light.png);
   background-repeat: no-repeat;
   background-position-x: 16px;

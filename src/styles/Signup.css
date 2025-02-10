@@ -157,7 +157,12 @@ main > #signupPage_container > #sp_login_container > .box {
   gap: 20px;
 }
 
-main > #signupPage_container > #sp_login_container > .box > input[type="text"] {
+main > #signupPage_container > #sp_login_container > .box > input[type="text"],
+main
+  > #signupPage_container
+  > #sp_login_container
+  > .box
+  > input[type="password"] {
   width: 546px;
   height: 69px;
   border-radius: 10px;
@@ -187,7 +192,7 @@ main
   > #signupPage_container
   > #sp_login_container
   > .box
-  > input[type="text"]:nth-child(2) {
+  > input[type="password"] {
   background-image: url(../assets/icons/Lock_alt_light.png);
   background-repeat: no-repeat;
   background-position-x: 16px;
@@ -264,11 +269,12 @@ main > #signupPage_container > #sp_signup_container > .box {
   gap: 20px;
 }
 
+main > #signupPage_container > #sp_signup_container > .box > input[type="text"],
 main
   > #signupPage_container
   > #sp_signup_container
   > .box
-  > input[type="text"] {
+  > input[type="password"] {
   width: 546px;
   height: 69px;
   border-radius: 10px;
@@ -297,7 +303,7 @@ main
   > #signupPage_container
   > #sp_signup_container
   > .box
-  > input[type="text"]:nth-child(2) {
+  > input[type="password"] {
   background-image: url(../assets/icons/Lock_alt_light.png);
   background-repeat: no-repeat;
   background-position-x: 16px;
@@ -308,18 +314,7 @@ main
   > #signupPage_container
   > #sp_signup_container
   > .box
-  > input[type="text"]:nth-child(3) {
-  background-image: url(../assets/icons/Lock_alt_light.png);
-  background-repeat: no-repeat;
-  background-position-x: 16px;
-  background-position-y: 22.5px;
-}
-
-main
-  > #signupPage_container
-  > #sp_signup_container
-  > .box
-  > input[type="text"]:nth-child(4) {
+  > input:nth-child(4) {
   background-image: url(../assets/icons/File_light.png);
   background-repeat: no-repeat;
   background-position-x: 16px;
