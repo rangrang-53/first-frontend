@@ -122,10 +122,11 @@ const ProductPage4 = () => {
       const response = await axios.get(
         `http://localhost:8080/review/${productUid}`,
         {
-          params: { page: page - 1, size: reviewsPerPage },
+          params: { page: page, size: reviewsPerPage },
         }
       );
       console.log(response.data);
+
       setReviews(response.data.reviews);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -135,18 +136,16 @@ const ProductPage4 = () => {
   };
 
   useEffect(() => {
+    // currentPage가 변경될 때만 리뷰를 다시 가져옴
     fetchReviews(currentPage);
-  }, [currentPage]);
+  }, [currentPage]); // currentPage가 변경될 때만 호출
 
   useEffect(() => {
-    console.log("Fetched totalPages:", totalPages); // totalPages 값 확인
+    // totalPages가 변경될 때, currentPage가 totalPages를 초과하면
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages); // 마지막 페이지로 이동
+    }
   }, [totalPages]);
-
-  useEffect(() => {
-    console.log("currentPage:", currentPage);
-    console.log("totalPages:", totalPages);
-    fetchReviews(currentPage);
-  }, [currentPage, totalPages]);
 
   const handlePageClick = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -346,31 +345,42 @@ const ProductPage4 = () => {
           </button>
           <div id="page">
             {totalPages > 0 && (
-              <div id="page">
+              <div className="pagination">
                 <div
                   className="pageNumber"
-                  onClick={() => handlePageClick(currentPage - 1)}
+                  onClick={() => {
+                    if (currentPage > 1) handlePageClick(currentPage - 1);
+                  }}
                   style={{
                     cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                    opacity: currentPage === 1 ? 0.5 : 1,
                   }}
                 >
                   {"<"}
                 </div>
+
                 {[...Array(totalPages)].map((_, index) => (
                   <div
                     key={index}
                     onClick={() => handlePageClick(index + 1)}
-                    className={currentPage === index + 1 ? "active" : ""}
+                    className={
+                      currentPage === index + 1 ? "pageItem active" : "pageItem"
+                    }
                   >
                     {index + 1}
                   </div>
                 ))}
+
                 <div
                   className="pageNumber"
-                  onClick={() => handlePageClick(currentPage + 1)}
+                  onClick={() => {
+                    if (currentPage < totalPages)
+                      handlePageClick(currentPage + 1);
+                  }}
                   style={{
                     cursor:
                       currentPage === totalPages ? "not-allowed" : "pointer",
+                    opacity: currentPage === totalPages ? 0.5 : 1,
                   }}
                 >
                   {">"}

@@ -530,26 +530,47 @@ main > #review_container > button {
   bottom: 50px;
 }
 
-main > #review_container > #page {
+#page {
   display: flex;
-  margin: 0 auto 0 auto;
   margin-top: 40px;
   gap: 8px;
+  justify-content: center;
+  align-items: center;
 }
 
-main > #review_container > #page > .pageNumber {
+.pagination {
+  display: flex;
+  gap: 10px; /* 버튼 간격 */
+}
+
+.pageNumber,
+.pageItem {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  border-radius: 5px;
+  font-family: "NotoSansKR", sans-serif;
+}
+
+.pageItem.active {
+  color: #6094b1;
+  font-weight: 700;
+}
+
+main > #page > .pageNumber {
   width: 40px;
   height: 40px;
   text-align: center;
-  font-family: "NotoSansKR";
+  font-family: "NotoSansKR", sans-serif;
   font-size: 16px;
   font-weight: 300;
   color: #5f5f5f;
   cursor: pointer;
   line-height: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-main > #review_container > #page > .pageNumber:nth-child(2) {
-  color: #6094b1;
-  font-weight: 700;
+.pageNumber:hover {
+  background-color: #f0f0f0;
 }
