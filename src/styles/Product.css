@@ -318,6 +318,13 @@ main > #review_container > .review > .review_information {
   gap: 11px;
 }
 
+.review_information > p {
+  color: #5f5f5f;
+  font-family: "NotoSansKR";
+  font-size: 14px;
+  font-weight: 500;
+}
+
 main > #review_container > .review > .review_information > .review_image {
   width: 40px;
   height: 40px;

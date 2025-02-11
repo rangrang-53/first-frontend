@@ -332,7 +332,8 @@ const ProductPage4 = () => {
                 </div>
                 <div className="review_title">{review.title}</div>
                 <div className="review_information">
-                  <p>{review.date}</p>
+                  <p>{review.writeDate.split("T")[0].replaceAll("-", ".")}</p>
+                  <div>{review.productDTO.img}</div>
                 </div>
               </div>
             ))

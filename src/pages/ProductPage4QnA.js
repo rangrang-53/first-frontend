@@ -8,9 +8,11 @@ import "../styles/ProductQnA.css";
 import "../styles/reset.css";
 
 const ProductPage4QnA = () => {
+  const [passwordInputs, setPasswordInputs] = useState({});
+  const [expandedQna, setExpandedQna] = useState(null);
+  const [unlockedQnas, setUnlockedQnas] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
   const [isQnaButtonDisabled, setIsQnaButtonDisabled] = useState(true);
-  const [passwordInput, setPasswordInput] = useState("");
   const [passwordPopupOpen, setPasswordPopupOpen] = useState(false);
   const [selectedQnaForPassword, setSelectedQnaForPassword] = useState(null);
 
@@ -79,38 +81,39 @@ const ProductPage4QnA = () => {
   const [selectedQna, setSelectedQna] = useState(null);
 
   const handleQnaClick = (qna) => {
-    if (qna.title === "🔒 비공개 질문입니다.") {
-      setSelectedQnaForPassword(qna);
-      setPasswordPopupOpen(true);
-    } else {
-      setSelectedQna(qna);
-      setIsQnaPopupOpen(true);
-    }
+    console.log("Q&A 클릭됨:", qna.uid); // ✅ 클릭 이벤트 확인
+    setExpandedQna((prev) => {
+      console.log(
+        "이전 상태:",
+        prev,
+        "새 상태:",
+        prev === qna.uid ? null : qna.uid
+      );
+      return prev === qna.uid ? null : qna.uid;
+    });
   };
 
-  const verifyPassword = async () => {
-    if (!passwordInput) {
-      alert("비밀번호를 입력하세요.");
-      return;
-    }
+  const handlePasswordChange = (uid, value) => {
+    setPasswordInputs((prev) => ({ ...prev, [uid]: value }));
+  };
 
+  const verifyPassword = async (qna) => {
     try {
       const response = await axios.post(
-        `http://localhost:8080/qna/${selectedQnaForPassword.uid}/verify`,
-        { password: passwordInput },
-        { headers: { "Content-Type": "application/json" } }
+        `http://localhost:8080/qna/${qna.uid}/verify`,
+        { password: passwordInputs[qna.uid] || "" },
+        { withCredentials: true }
       );
-
       if (response.status === 200) {
-        setSelectedQna(response.data); // 원래 QnA 데이터 저장
-        setIsQnaPopupOpen(true); // QnA 상세보기 열기
-        setPasswordPopupOpen(false); // 비밀번호 입력창 닫기
-        setPasswordInput(""); // 입력값 초기화
+        setQnas((prevQnas) =>
+          prevQnas.map((item) =>
+            item.uid === qna.uid ? { ...response.data, isUnlocked: true } : item
+          )
+        );
+        setExpandedQna(qna.uid); // 비밀번호 입력 성공 시 해당 Q&A 확장
       }
     } catch (error) {
-      console.error("비밀번호 확인 오류:", error);
-      alert("비밀번호가 일치하지 않습니다.");
-      setPasswordInput(""); // 입력값 초기화
+      alert("비밀번호가 틀렸습니다.");
     }
   };
 
@@ -119,12 +122,17 @@ const ProductPage4QnA = () => {
     setSelectedQna(null);
   };
 
+  const maskId = (id) => {
+    if (!id || id.length < 4) return "****";
+    return id.substring(0, 4) + "*".repeat(id.length - 4);
+  };
+
   const [qnaTitle, setQnaTitle] = useState("");
   const [qnaContent, setQnaContent] = useState("");
   const { productUid } = useParams();
 
-  const [qnaCategory, setQnaCategory] = useState(null);
-  const [qnaPassword, setQnaPassword] = useState(null);
+  const [qnaCategory, setQnaCategory] = useState("");
+  const [qnaPassword, setQnaPassword] = useState("");
 
   const [qnas, setQnas] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -141,7 +149,11 @@ const ProductPage4QnA = () => {
           params: { page: page, size: qnasPerPage },
         }
       );
-      console.log(response.data);
+
+      const updatedQnas = response.data.qnas.map((qna) => ({
+        ...qna,
+        isUnlocked: false, // 새로고침할 때 다시 비밀번호가 필요한 상태로 초기화
+      }));
 
       setQnas(response.data.qnas);
       setTotalPages(response.data.totalPages);
@@ -152,9 +164,8 @@ const ProductPage4QnA = () => {
   };
 
   useEffect(() => {
-    // currentPage가 변경될 때만 리뷰를 다시 가져옴
     fetchQnas(currentPage);
-  }, [currentPage]); // currentPage가 변경될 때만 호출
+  }, [currentPage]);
 
   useEffect(() => {
     // totalPages가 변경될 때, currentPage가 totalPages를 초과하면
@@ -162,6 +173,10 @@ const ProductPage4QnA = () => {
       setCurrentPage(totalPages); // 마지막 페이지로 이동
     }
   }, [totalPages]);
+
+  useEffect(() => {
+    console.log("expandedQna 상태 변경:", expandedQna); // ✅ 상태 변경 확인
+  }, [expandedQna]);
 
   const handlePageClick = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -184,9 +199,11 @@ const ProductPage4QnA = () => {
     }
 
     const qnaData = {
-      title: qnaTitle,
-      content: qnaContent,
-      category: qnaCategory,
+      title: qnaTitle || "", // null이면 ""로 대체
+      content: qnaContent || "",
+      category: ["product", "delivery", "etc"].includes(qnaCategory)
+        ? qnaCategory
+        : "etc",
       productDTO: { uid: productUid },
       password: qnaPassword ? qnaPassword : null,
     };
@@ -201,7 +218,10 @@ const ProductPage4QnA = () => {
         }
       );
 
-      setQnas((prevQnas) => [...prevQnas, response.data]);
+      console.log("서버응답: ", response.data);
+
+      await fetchQnas(currentPage);
+
       setIsPopupOpen(false);
       setQnaTitle("");
       setQnaContent("");
@@ -219,6 +239,12 @@ const ProductPage4QnA = () => {
       content: qnaContent,
       password: qnaPassword,
     };
+  };
+
+  const categoryMap = {
+    product: "[상품문의]",
+    delivery: "[배송문의]",
+    etc: "[기타문의]",
   };
 
   return (
@@ -302,17 +328,46 @@ const ProductPage4QnA = () => {
         </div>
 
         <div id="qna_container">
-          {qnas && qnas.length > 0 ? (
+          {qnas.length > 0 ? (
             qnas.map((qna) => (
               <div
-                className="qna"
                 key={qna.uid}
-                onClick={() => handleQnaClick(qna)}
+                className={`qna_item ${
+                  expandedQna === qna.uid ? "expanded" : ""
+                }`}
               >
-                <div className="qna_title">{qna.title}</div>
-                <div className="qna_information">
-                  <p>{qna.date}</p>
+                <div className="qna_header" onClick={() => handleQnaClick(qna)}>
+                  <p>{categoryMap[qna.category] || "[기타문의]"}</p>
+                  <div className="qna_title">{qna.title}</div>
+                  <div className="qna_info">
+                    <p>{qna.writeDate.split("T")[0].replaceAll("-", ".")}</p>
+                    <p>{maskId(qna.userDTO?.id)}</p>
+                  </div>
                 </div>
+
+                {expandedQna === qna.uid && (
+                  <div className="qna_content">
+                    {qna.title === "🔒 비공개 질문입니다." &&
+                    !qna.isUnlocked ? (
+                      // 🔥 여기서 비밀번호 입력창이 Q&A 내부에서만 보이도록 변경!
+                      <div className="password_input">
+                        <input
+                          type="password"
+                          placeholder="비밀번호 입력"
+                          value={passwordInputs[qna.uid] || ""}
+                          onChange={(e) =>
+                            handlePasswordChange(qna.uid, e.target.value)
+                          }
+                        />
+                        <button onClick={() => verifyPassword(qna)}>
+                          확인
+                        </button>
+                      </div>
+                    ) : (
+                      <p>{qna.content}</p>
+                    )}
+                  </div>
+                )}
               </div>
             ))
           ) : (
@@ -379,17 +434,21 @@ const ProductPage4QnA = () => {
               <input
                 type="text"
                 placeholder="제목"
-                value={qnaTitle}
+                value={qnaTitle ?? ""}
                 onChange={(e) => setQnaTitle(e.target.value)}
               ></input>
             </div>
 
             <div className="content_flex">
               <p>카테고리</p>
-              <select name="category">
-                <option value="qna_product">상품문의</option>
-                <option value="qna_delivery">배송문의</option>
-                <option value="qna_etc">기타문의</option>
+              <select
+                name="category"
+                onChange={(e) => setQnaCategory(e.target.value)}
+              >
+                <option value="">카테고리</option>
+                <option value="product">상품문의</option>
+                <option value="delivery">배송문의</option>
+                <option value="etc">기타문의</option>
               </select>
               <p>비밀번호</p>
               <input
@@ -403,7 +462,7 @@ const ProductPage4QnA = () => {
               <p>내용</p>
               <textarea
                 placeholder="내용"
-                value={qnaContent}
+                value={qnaContent ?? ""}
                 onChange={(e) => setQnaContent(e.target.value)}
               ></textarea>
             </div>
@@ -415,41 +474,6 @@ const ProductPage4QnA = () => {
                 value={"등록"}
                 onClick={handleSubmitQna}
               ></input>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {isQnaPopupOpen && selectedQna && (
-        <div className="popup">
-          <div className="qna_popup-content">
-            <div className="qna_text">
-              <p className="qna_title">{selectedQna.title}</p>
-              <div className="qna_info">
-                <p className="qna_writer">{selectedQna.writer}</p>
-                <p className="qna_date">{selectedQna.date}</p>
-              </div>
-              <p className="qna_content">{selectedQna.content}</p>
-            </div>
-            <button onClick={closeQnaPopup} className="close_button">
-              닫기
-            </button>
-          </div>
-        </div>
-      )}
-
-      {passwordPopupOpen && (
-        <div className="popup">
-          <div className="popup-content">
-            <p>비밀번호를 입력하세요</p>
-            <input
-              type="password"
-              value={passwordInput}
-              onChange={(e) => setPasswordInput(e.target.value)}
-            />
-            <div className="popup_buttons">
-              <button onClick={() => setPasswordPopupOpen(false)}>취소</button>
-              <button onClick={verifyPassword}>확인</button>
             </div>
           </div>
         </div>

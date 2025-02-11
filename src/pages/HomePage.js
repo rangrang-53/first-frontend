@@ -7,10 +7,15 @@ import "../styles/Home.css";
 import "../styles/reset.css";
 
 const HomePage = () => {
+  const [weatherImage, setWeatherImage] = useState(
+    "/assets/icons/Sun_light@3x.png"
+  );
   const navigate = useNavigate();
   const [weather, setWeather] = useState(null);
   const [location, setLocation] = useState("위치 정보를 불러오는 중...");
   const [address, setAddress] = useState("주소를 가져오는 중...");
+  const [weatherStatus, setWeatherStatus] =
+    useState("기상 상태를 불러오는 중...");
 
   const getWeather = useCallback(async (lat, lon) => {
     const { nx, ny } = latLonToGrid(lat, lon);
@@ -25,17 +30,72 @@ const HomePage = () => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      if (data.response.body.items.item) {
-        const tempData = data.response.body.items.item.find(
-          (i) => i.category === "T1H"
+      console.log("API 응답 데이터:", data);
+
+      if (data.response && data.response.body && data.response.body.items) {
+        const items = data.response.body.items.item;
+        console.log("API 응답의 아이템:", items);
+
+        const tempData = items.find((i) => i.category === "T1H");
+        const ptyData = items.find((i) => i.category === "PTY");
+
+        console.log("Pty Data:", ptyData);
+        console.log(
+          "아이템 카테고리 리스트:",
+          items.map((item) => item.category)
         );
-        setWeather(tempData.obsrValue + "°C");
+
+        if (tempData && tempData.obsrValue) {
+          setWeather(tempData.obsrValue + "°C");
+        } else {
+          setWeather("온도 정보를 찾을 수 없습니다.");
+        }
+
+        if (ptyData && ptyData.obsrValue) {
+          const { status, image } = getPrecipitationType(ptyData.obsrValue); // 상태와 이미지 정보 반환
+          setWeatherStatus(status);
+          setWeatherImage(image); // 이미지 업데이트
+        } else {
+          setWeatherStatus("강수 상태 정보를 찾을 수 없습니다.");
+        }
+      } else {
+        console.error("응답 데이터에서 items를 찾을 수 없습니다.");
       }
     } catch (error) {
       console.error("날씨 정보를 가져오는 중 오류 발생:", error);
       setWeather("날씨 정보를 불러올 수 없습니다.");
+      setWeatherStatus("기상 상태를 불러올 수 없습니다.");
     }
   }, []);
+
+  function getSkyStatus(skyCode) {
+    switch (skyCode) {
+      case "1":
+        return "맑음";
+      case "3":
+        return "구름 많음";
+      case "4":
+        return "흐림";
+      default:
+        return "알 수 없는 하늘 상태";
+    }
+  }
+
+  // 강수 형태를 해석하는 함수
+  function getPrecipitationType(ptyCode) {
+    switch (ptyCode) {
+      case "0":
+        return { status: "없음", image: "/assets/icons/Sun_light@3x.png" };
+      case "1":
+        return { status: "비", image: "/assets/icons/Rain_light@3x.png" };
+      case "2":
+        return { status: "비/눈", image: "/assets/icons/Rain_light@3x.png" };
+      case "3":
+        return { status: "눈", image: "/assets/icons/Winter_light@3x.png" };
+      default:
+        return "알 수 없는 강수 형태";
+    }
+  }
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -224,7 +284,12 @@ const HomePage = () => {
           <div id="box1_component2">
             <p>현재 날씨</p>
             <p>{location}</p>
-            <p>{weather ? weather : "날씨 정보를 불러오는 중..."}</p>
+            <img src={weatherImage} alt={weatherStatus} />
+            <p>기온 : {weather ? weather : "날씨 정보를 불러오는 중..."}</p>
+            <p>
+              강수량 :{" "}
+              {weatherStatus ? weatherStatus : "기상 상태를 불러오는 중..."}
+            </p>
             <div></div>
           </div>
         </div>
