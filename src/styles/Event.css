@@ -103,10 +103,6 @@ main > nav > #icon > li:nth-child(3) {
   background-position: center;
 }
 
-main > nav > #icon > li:nth-child(3) {
-  background-image: url(../assets/icons/Search_light.png);
-}
-
 main > nav > #menu > li:nth-child(1),
 main > nav > #menu > li:nth-child(3),
 main > nav > #menu > li:nth-child(5),
@@ -221,25 +217,33 @@ main > #eventPage_container > #vanner_container > li > .text > p:nth-child(2) {
 
 /*vanner end */
 
-main > #eventPage_container > #page {
+#page {
   display: flex;
-  margin-top: 236px;
+  margin-top: 40px;
   gap: 8px;
+  justify-content: center;
+  align-items: center;
 }
 
-main > #eventPage_container > #page > .pageNumber {
+main > #page > .pageNumber {
   width: 40px;
   height: 40px;
   text-align: center;
-  font-family: "NotoSansKR";
+  font-family: "NotoSansKR", sans-serif;
   font-size: 16px;
   font-weight: 300;
   color: #5f5f5f;
   cursor: pointer;
   line-height: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-main > #eventPage_container > #page > .pageNumber:nth-child(2) {
+main > #page > .pageNumber:nth-child(2) {
   color: #6094b1;
   font-weight: 700;
+}
+
+.pageNumber:hover {
+  background-color: #f0f0f0;
 }

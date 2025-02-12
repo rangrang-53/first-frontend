@@ -1,13 +1,56 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import cart_icon from "../assets/icons/Bag_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
+import { useAuth } from "../context/AuthContext.js";
 import "../styles/Cart.css";
 import "../styles/reset.css";
 
 const CartPage = () => {
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
+      }
+
+      const response = await axios.get("http://localhost:8080/check-login", {
+        withCredentials: true,
+      });
+
+      setIsLoggedIn(response.data.isAuthenticated); // 서버 응답 구조에 맞게 수정 필요
+    } catch (error) {
+      setIsLoggedIn(false);
+    }
+  };
+
+  const handleLoginLogout = async () => {
+    if (isLoggedIn) {
+      await axios.post(
+        "http://localhost:8080/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      localStorage.removeItem("authToken");
+      setIsLoggedIn(false);
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <>
       <header>
@@ -37,7 +80,11 @@ const CartPage = () => {
             <li onClick={() => navigate("/cart")}>
               <img src={cart_icon} alt="장바구니"></img>
             </li>
-            <li></li>
+            <li>
+              <button onClick={handleLoginLogout}>
+                {isLoggedIn ? "로그아웃" : "로그인"}
+              </button>
+            </li>
           </ul>
         </nav>
 

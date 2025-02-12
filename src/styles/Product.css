@@ -103,10 +103,6 @@ main > nav > #icon > li:nth-child(3) {
   background-position: center;
 }
 
-main > nav > #icon > li:nth-child(3) {
-  background-image: url(../assets/icons/Search_light.png);
-}
-
 main > nav > #menu > li:nth-child(1),
 main > nav > #menu > li:nth-child(3),
 main > nav > #menu > li:nth-child(5),
@@ -125,7 +121,7 @@ main > #product_container {
 main > #product_container > #product_image {
   width: 451px;
   height: 462px;
-  background-image: url(../assets/images/11ee47d96180f2e58a697f0b9fa51588.jpg);
+  background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
   background-position: center;
   background-size: cover;
 }
@@ -297,11 +293,18 @@ main > #review_container > .review {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 40px 56px;
   box-sizing: border-box;
   width: 1116px;
   height: 100px;
   cursor: pointer;
   border-bottom: 1px #5f5f5f solid;
+}
+
+main > #review_container > .review > .review_star {
+  display: flex;
+  justify-content: flex-start; /* 별들이 왼쪽으로 정렬되도록 설정 */
+  width: 100px; /* 별 개수와 관계없이 일정한 너비 유지 */
 }
 
 main > #review_container > .review > .review_title {
@@ -328,7 +331,7 @@ main > #review_container > .review > .review_information {
 main > #review_container > .review > .review_information > .review_image {
   width: 40px;
   height: 40px;
-  background-image: url(../assets/images/11ee68e334aa87818a7fa997f7caae56.jpg);
+  background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
   background-position: center;
   background-size: contain;
 }
@@ -474,43 +477,58 @@ main > #review_container > button {
   height: 752px;
   text-align: left;
   display: flex;
-  flex-wrap: wrap;
-  padding: 32px 16px 32px 16px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
   box-sizing: border-box;
   gap: 80px;
   position: relative;
 }
 
-.review_popup-content > .review_image {
-  width: 300px;
-  height: 400px;
-  background-image: url(../assets/images/01.jpg);
-  background-position: center;
+#popup_box1 {
+  display: flex;
+  gap: 40px;
 }
 
-.review_popup-content > .review_text {
+.review_popup-content > #popup_box1 > .review_image {
+  width: 300px;
+  height: 400px;
+  background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
+  background-position: center;
+  background-size: cover;
+}
+
+.review_popup-content > #popup_box1 > .review_text {
   font-family: "NotoSansKR";
   line-height: 20px;
   font-weight: 500;
 }
 
-.review_popup-content > .review_text > .review_title {
+.review_popup-content > #popup_box1 > .review_text > .review_title {
   font-size: 20px;
   margin-bottom: 24px;
 }
 
-.review_popup-content > .review_text > .review_star {
+.review_popup-content > #popup_box1 > .review_text > .review_star {
   display: flex;
 }
 
-.review_popup-content > .review_text > .review_star > .review_writer {
+.review_popup-content
+  > #popup_box1
+  > .review_text
+  > .review_star
+  > .review_writer {
   margin-left: 300px;
   color: #5f5f5f;
   font-family: "NotoSansKR";
   font-size: 14px;
   font-weight: 500;
 }
-.review_popup-content > .review_text > .review_star > .review_date {
+.review_popup-content
+  > #popup_box1
+  > .review_text
+  > .review_star
+  > .review_date {
   margin-left: 60px;
   color: #5f5f5f;
   font-family: "NotoSansKR";
@@ -518,23 +536,47 @@ main > #review_container > button {
   font-weight: 500;
 }
 
-.review_popup-content > .review_text > .review_content {
+.review_popup-content > #popup_box1 > .review_text > .review_content {
   margin-top: 60px;
 }
 
-.close_button {
+#popup_buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.edit_button,
+.delete_button {
   display: block;
   width: 100px;
   height: 50px;
   margin-top: 20px;
   padding: 10px;
-  background: rgba(140, 206, 243, 0.7);
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.edit_button {
+  background: rgba(140, 206, 243, 0.7);
+}
+
+.close_button {
+  border: none;
+  background-color: white;
+  display: block;
+  width: 50px;
+  height: 50px;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 9999px;
+  cursor: pointer;
   position: absolute;
-  right: 500px;
-  bottom: 50px;
+  top: 0px;
+  right: 10px;
+  font-size: 18px;
+  text-align: center;
 }
 
 #page {

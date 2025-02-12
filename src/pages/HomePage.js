@@ -1,21 +1,94 @@
+import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import cart_icon from "../assets/icons/Bag_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
+import { useAuth } from "../context/AuthContext.js";
 import "../styles/Home.css";
 import "../styles/reset.css";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [weatherImage, setWeatherImage] = useState(
     "/assets/icons/Sun_light@3x.png"
   );
-  const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      setIsLoggedIn(false);
+      return;
+    }
+
+    checkLoginStatus();
+  }, [setIsLoggedIn]);
+
+  const checkLoginStatus = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
+      }
+
+      const response = await axios.get("http://localhost:8080/check-login", {
+        withCredentials: true,
+      });
+
+      setIsLoggedIn(response.status === 200);
+    } catch (error) {
+      setIsLoggedIn(false);
+    }
+  };
+
+  const handleLoginLogout = async () => {
+    if (isLoggedIn) {
+      await axios.post(
+        "http://localhost:8080/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      localStorage.removeItem("authToken");
+      setIsLoggedIn(false);
+
+      // 페이지를 새로고침하여 상태를 완전히 초기화
+      window.location.href = "/";
+    } else {
+      navigate("/login");
+    }
+  };
+
   const [weather, setWeather] = useState(null);
-  const [location, setLocation] = useState("위치 정보를 불러오는 중...");
-  const [address, setAddress] = useState("주소를 가져오는 중...");
+  const [currentDate, setCurrentDate] = useState("");
+  useEffect(() => {
+    const date = new Date();
+    const formattedDate = `${date.getFullYear()}년 ${
+      date.getMonth() + 1
+    }월 ${date.getDate()}일`;
+    setCurrentDate(formattedDate);
+  }, []);
+
   const [weatherStatus, setWeatherStatus] =
     useState("기상 상태를 불러오는 중...");
+
+  function getBaseTime() {
+    const date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+
+    // 정각 이전이면 한 시간 전 값 사용
+    if (minutes < 40) {
+      hours -= 1;
+    }
+
+    // 시각을 두 자리 문자열로 변환 (예: 9 → "09", 13 → "13")
+    const baseTime = `${String(hours).padStart(2, "0")}30`;
+    return baseTime;
+  }
 
   const getWeather = useCallback(async (lat, lon) => {
     const { nx, ny } = latLonToGrid(lat, lon);
@@ -30,20 +103,12 @@ const HomePage = () => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log("API 응답 데이터:", data);
 
       if (data.response && data.response.body && data.response.body.items) {
         const items = data.response.body.items.item;
-        console.log("API 응답의 아이템:", items);
 
         const tempData = items.find((i) => i.category === "T1H");
         const ptyData = items.find((i) => i.category === "PTY");
-
-        console.log("Pty Data:", ptyData);
-        console.log(
-          "아이템 카테고리 리스트:",
-          items.map((item) => item.category)
-        );
 
         if (tempData && tempData.obsrValue) {
           setWeather(tempData.obsrValue + "°C");
@@ -54,7 +119,7 @@ const HomePage = () => {
         if (ptyData && ptyData.obsrValue) {
           const { status, image } = getPrecipitationType(ptyData.obsrValue); // 상태와 이미지 정보 반환
           setWeatherStatus(status);
-          setWeatherImage(image); // 이미지 업데이트
+          setWeatherImage(image);
         } else {
           setWeatherStatus("강수 상태 정보를 찾을 수 없습니다.");
         }
@@ -67,19 +132,6 @@ const HomePage = () => {
       setWeatherStatus("기상 상태를 불러올 수 없습니다.");
     }
   }, []);
-
-  function getSkyStatus(skyCode) {
-    switch (skyCode) {
-      case "1":
-        return "맑음";
-      case "3":
-        return "구름 많음";
-      case "4":
-        return "흐림";
-      default:
-        return "알 수 없는 하늘 상태";
-    }
-  }
 
   // 강수 형태를 해석하는 함수
   function getPrecipitationType(ptyCode) {
@@ -104,43 +156,14 @@ const HomePage = () => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
 
-          // 날씨 정보 가져오기
           getWeather(lat, lon);
-
-          // Kakao API로 주소 가져오기
-          getAddressFromKakao(lat, lon);
         },
         (error) => {
           console.error("위치 정보를 가져올 수 없습니다.", error);
-          setLocation("위치 정보를 가져올 수 없습니다.");
-          setAddress("주소를 가져올 수 없습니다.");
         }
       );
     }
   }, [getWeather]);
-
-  const getAddressFromKakao = async (lat, lon) => {
-    const apiKey = "0cd3ce203a3543bc4102a0e978b07975"; // 발급받은 Kakao REST API 키
-    const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${lon}&y=${lat}&input_coord=WGS84`;
-
-    try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `KakaoAK ${apiKey}`,
-        },
-      });
-      const data = await response.json();
-      if (data.documents && data.documents.length > 0) {
-        const addressName = data.documents[0].address.address_name;
-        setAddress(addressName);
-      } else {
-        setAddress("주소 정보를 불러올 수 없습니다.");
-      }
-    } catch (error) {
-      console.error("주소 정보를 가져오는 중 오류 발생:", error);
-      setAddress("주소 정보를 불러올 수 없습니다.");
-    }
-  };
 
   function latLonToGrid(lat, lon) {
     const RE = 6371.00877;
@@ -210,7 +233,11 @@ const HomePage = () => {
             <li onClick={() => navigate("/cart")}>
               <img src={cart_icon} alt="장바구니"></img>
             </li>
-            <li></li>
+            <li>
+              <button onClick={handleLoginLogout}>
+                {isLoggedIn ? "로그아웃" : "로그인"}
+              </button>
+            </li>
           </ul>
         </nav>
 
@@ -283,10 +310,13 @@ const HomePage = () => {
           </div>
           <div id="box1_component2">
             <p>현재 날씨</p>
-            <p>{location}</p>
-            <img src={weatherImage} alt={weatherStatus} />
-            <p>기온 : {weather ? weather : "날씨 정보를 불러오는 중..."}</p>
-            <p>
+            <p>TODAY : {currentDate}</p>
+            <div id="weather_box">
+              <img src={weatherImage} alt={weatherStatus} />
+              <p>{weather ? weather : "날씨 정보를 불러오는 중..."}</p>
+            </div>
+
+            <p id="mm">
               강수량 :{" "}
               {weatherStatus ? weatherStatus : "기상 상태를 불러오는 중..."}
             </p>
@@ -368,7 +398,12 @@ const HomePage = () => {
 
         <ul className="title">
           <li></li>
-          <li>1월의 브랜드</li>
+          <li>
+            {currentDate
+              ? currentDate.split("년 ")[1]?.split("월")[0]
+              : "날짜 정보 없음"}
+            월의 브랜드
+          </li>
         </ul>
         <div id="this_brand">
           <div id="lookbook" onClick={() => navigate("/brand")}>

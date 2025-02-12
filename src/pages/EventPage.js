@@ -1,13 +1,62 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import cart_icon from "../assets/icons/Bag_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
+import { useAuth } from "../context/AuthContext.js";
 import "../styles/Event.css";
 import "../styles/reset.css";
 
 const EventPage = () => {
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const handlePageClick = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
+      }
+
+      const response = await axios.get("http://localhost:8080/check-login", {
+        withCredentials: true,
+      });
+
+      setIsLoggedIn(response.data.isAuthenticated); // 서버 응답 구조에 맞게 수정 필요
+    } catch (error) {
+      setIsLoggedIn(false);
+    }
+  };
+
+  const handleLoginLogout = async () => {
+    if (isLoggedIn) {
+      await axios.post(
+        "http://localhost:8080/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      localStorage.removeItem("authToken");
+      setIsLoggedIn(false);
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <>
       <header>
@@ -39,7 +88,11 @@ const EventPage = () => {
             <li onClick={() => navigate("/cart")}>
               <img src={cart_icon} alt="장바구니"></img>
             </li>
-            <li></li>
+            <li>
+              <button onClick={handleLoginLogout}>
+                {isLoggedIn ? "로그아웃" : "로그인"}
+              </button>
+            </li>
           </ul>
         </nav>
 
@@ -81,18 +134,49 @@ const EventPage = () => {
           </ul>
 
           <div id="page">
-            <div className="pageNumber">{"<"}</div>
-            <div className="pageNumber">1</div>
-            <div className="pageNumber">2</div>
-            <div className="pageNumber">3</div>
-            <div className="pageNumber">4</div>
-            <div className="pageNumber">5</div>
-            <div className="pageNumber">6</div>
-            <div className="pageNumber">7</div>
-            <div className="pageNumber">8</div>
-            <div className="pageNumber">9</div>
-            <div className="pageNumber">10</div>
-            <div className="pageNumber">{">"}</div>
+            {totalPages > 0 && (
+              <div className="pagination">
+                <div
+                  className="pageNumber"
+                  onClick={() => {
+                    if (currentPage > 1) handlePageClick(currentPage - 1);
+                  }}
+                  style={{
+                    cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                    opacity: currentPage === 1 ? 0.5 : 1,
+                  }}
+                >
+                  {"<"}
+                </div>
+
+                {[...Array(totalPages)].map((_, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handlePageClick(index + 1)}
+                    className={
+                      currentPage === index + 1 ? "pageItem active" : "pageItem"
+                    }
+                  >
+                    {index + 1}
+                  </div>
+                ))}
+
+                <div
+                  className="pageNumber"
+                  onClick={() => {
+                    if (currentPage < totalPages)
+                      handlePageClick(currentPage + 1);
+                  }}
+                  style={{
+                    cursor:
+                      currentPage === totalPages ? "not-allowed" : "pointer",
+                    opacity: currentPage === totalPages ? 0.5 : 1,
+                  }}
+                >
+                  {">"}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </main>

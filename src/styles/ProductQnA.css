@@ -103,10 +103,6 @@ main > nav > #icon > li:nth-child(3) {
   background-position: center;
 }
 
-main > nav > #icon > li:nth-child(3) {
-  background-image: url(../assets/icons/Search_light.png);
-}
-
 main > nav > #menu > li:nth-child(1),
 main > nav > #menu > li:nth-child(3),
 main > nav > #menu > li:nth-child(5),
@@ -125,7 +121,7 @@ main > #product_container {
 main > #product_container > #product_image {
   width: 451px;
   height: 462px;
-  background-image: url(../assets/images/11ee47d96180f2e58a697f0b9fa51588.jpg);
+  background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
   background-position: center;
   background-size: cover;
 }
@@ -594,21 +590,6 @@ main > #qna_container > button {
 
 .qna_popup-content > .qna_text > .qna_content {
   margin-top: 60px;
-}
-
-.close_button {
-  display: block;
-  width: 100px;
-  height: 50px;
-  margin-top: 20px;
-  padding: 10px;
-  background: rgba(140, 206, 243, 0.7);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  position: absolute;
-  right: 500px;
-  bottom: 50px;
 }
 
 /* 페이징 시작 */

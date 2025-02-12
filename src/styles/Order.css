@@ -99,10 +99,6 @@ main > nav > #icon > li:nth-child(3) {
   background-position: center;
 }
 
-main > nav > #icon > li:nth-child(3) {
-  background-image: url(../assets/icons/Search_light.png);
-}
-
 main > nav > #menu > li:nth-child(1),
 main > nav > #menu > li:nth-child(3),
 main > nav > #menu > li:nth-child(5),
@@ -173,7 +169,7 @@ main > #orderPage_container > .product:hover {
 main > #orderPage_container > .product > li > #image {
   width: 100px;
   height: 150px;
-  background-image: url(../assets/images/11eea5318da1b72ab238af406c963c66.jpg);
+  background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
   background-position: center;
   background-size: cover;
   position: relative;
@@ -232,7 +228,7 @@ main > #op_totalPrice > li:nth-child(5) {
 
 main > #orderPage_container2 {
   display: flex;
-  gap:24px;
+  gap: 24px;
   margin-top: 232px;
 }
 
@@ -267,9 +263,13 @@ main > #orderPage_container2 > .orderPage_container2_box > .box {
   line-height: 20px;
 }
 
-main > #orderPage_container2 > .orderPage_container2_box:nth-child(2) > .box > .inputs{
+main
+  > #orderPage_container2
+  > .orderPage_container2_box:nth-child(2)
+  > .box
+  > .inputs {
   flex-direction: row;
-  gap:4px;
+  gap: 4px;
   font-family: "NotoSansKR";
   color: #5f5f5f;
   font-size: 16px;
@@ -284,9 +284,10 @@ main > #agree_container {
   gap: 20px;
 }
 
-main > #agree_container > #agree1, main> #agree_container> #agree2 {
+main > #agree_container > #agree1,
+main > #agree_container > #agree2 {
   display: flex;
-  gap:10px;
+  gap: 10px;
   font-family: "NotoSansKR";
   font-size: 14px;
   font-weight: 500;

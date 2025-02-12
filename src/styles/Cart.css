@@ -99,10 +99,6 @@ main > nav > #icon > li:nth-child(3) {
   background-position: center;
 }
 
-main > nav > #icon > li:nth-child(3) {
-  background-image: url(../assets/icons/Search_light.png);
-}
-
 main > nav > #menu > li:nth-child(1),
 main > nav > #menu > li:nth-child(3),
 main > nav > #menu > li:nth-child(5),
@@ -148,7 +144,7 @@ main > #cartPage_container > .product {
 main > #cartPage_container > .product > li > #image {
   width: 100px;
   height: 150px;
-  background-image: url(../assets/images/11efab10112b6ebb93168f6a8eff6633.jpg);
+  background-image: url(../assets/images/2a2037f9019e4d60874fceb1d675d6e4_20240920141115.jpg);
   background-position: center;
   background-size: cover;
   margin-left: -67px;

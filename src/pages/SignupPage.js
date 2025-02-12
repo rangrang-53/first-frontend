@@ -1,14 +1,55 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import cart_icon from "../assets/icons/Bag_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
+import { useAuth } from "../context/AuthContext.js";
 import "../styles/Signup.css";
 import "../styles/reset.css";
 
 const SignupPage = () => {
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
+      }
+
+      const response = await axios.get("http://localhost:8080/check-login", {
+        withCredentials: true,
+      });
+
+      setIsLoggedIn(response.data.isAuthenticated); // 서버 응답 구조에 맞게 수정 필요
+    } catch (error) {
+      setIsLoggedIn(false);
+    }
+  };
+
+  const handleLoginLogout = async () => {
+    if (isLoggedIn) {
+      await axios.post(
+        "http://localhost:8080/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      localStorage.removeItem("authToken");
+      setIsLoggedIn(false);
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  };
 
   const [loginData, setLoginData] = useState({ id: "", password: "" });
   const [signupData, setSignupData] = useState({
@@ -107,7 +148,11 @@ const SignupPage = () => {
                 <img src={cart_icon} alt="장바구니"></img>
               </Link>
             </li>
-            <li></li>
+            <li>
+              <button onClick={handleLoginLogout}>
+                {isLoggedIn ? "로그아웃" : "로그인"}
+              </button>
+            </li>
           </ul>
         </nav>
 
@@ -132,7 +177,9 @@ const SignupPage = () => {
               <button onClick={() => setLoginData({ id: "", password: "" })}>
                 취소
               </button>
-              <button onClick={handleLogin}>확인</button>
+              <button id="ok" onClick={handleLogin}>
+                확인
+              </button>
             </div>
           </div>
 
@@ -181,7 +228,9 @@ const SignupPage = () => {
               >
                 취소
               </button>
-              <button onClick={handleSignup}>확인</button>
+              <button id="ok" onClick={handleSignup}>
+                확인
+              </button>
             </div>
           </div>
         </div>

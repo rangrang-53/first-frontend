@@ -5,40 +5,68 @@ import cart_icon from "../assets/icons/Bag_alt_light.png";
 import star_icon from "../assets/icons/Star_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
+import { useAuth } from "../context/AuthContext.js";
 import "../styles/Product.css";
 import "../styles/reset.css";
 
 const ProductPage4 = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
+  const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
+
   const [isReviewButtonDisabled, setIsReviewButtonDisabled] = useState(true);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const maskId = (id) => {
+    if (!id || id.length < 4) return "****";
+    return id.substring(0, 4) + "*".repeat(id.length - 4);
+  };
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token =
+      localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     setIsLoggedIn(!!token);
     setIsReviewButtonDisabled(!token);
   }, []);
 
-  const loginUser = async (loginData) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/login",
-        loginData,
-        {
-          withCredentials: true, // 세션 쿠키를 보내기 위한 설정
-        }
-      );
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
 
-      if (response.status === 200) {
-        console.log("로그인 성공!");
-        setIsLoggedIn(true); // 로그인 상태 갱신
-        setIsReviewButtonDisabled(false);
+  const checkLoginStatus = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
       }
+
+      const response = await axios.get("http://localhost:8080/check-login", {
+        withCredentials: true,
+      });
+
+      setIsLoggedIn(response.data.isLoggedIn); // 서버 응답 구조에 맞게 수정 필요
     } catch (error) {
-      console.error("로그인 실패:", error);
+      setIsLoggedIn(false);
     }
   };
 
-  const navigate = useNavigate();
+  const handleLoginLogout = async () => {
+    if (isLoggedIn) {
+      await axios.post(
+        "http://localhost:8080/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      localStorage.removeItem("authToken");
+      setIsLoggedIn(false);
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  };
+
   const [selectedColor, setSelectedColor] = useState("yellow");
   const [quantity, setQuantity] = useState(1);
   const originalPrice = 38000;
@@ -97,7 +125,9 @@ const ProductPage4 = () => {
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString();
   const togglePopup = () => {
-    setIsPopupOpen(!isPopupOpen); // 팝업 상태 토글
+    setIsPopupOpen(!isPopupOpen);
+    setIsEditMode(false);
+    setSelectedReview(null); // 팝업 상태 토글
   };
 
   const handleStarClick = (index) => {
@@ -110,11 +140,15 @@ const ProductPage4 = () => {
   const handleReviewClick = (review) => {
     setSelectedReview(review);
     setIsReviewPopupOpen(true);
+    setIsEditMode(false);
   };
 
   const closeReviewPopup = () => {
     setIsReviewPopupOpen(false);
     setSelectedReview(null);
+    setIsEditMode(false);
+
+    fetchReviews(currentPage);
   };
 
   const fetchReviews = async (page) => {
@@ -172,7 +206,7 @@ const ProductPage4 = () => {
       content: reviewContent,
       rating: rating,
       productDTO: { uid: productUid },
-      image: reviewImage ? reviewImage : null,
+      ...(reviewImage && { image: reviewImage }),
     };
 
     try {
@@ -187,7 +221,9 @@ const ProductPage4 = () => {
         }
       );
 
-      setReviews((prevReviews) => [...prevReviews, response.data]);
+      response.data.writeDate = new Date().toISOString();
+
+      setReviews((prevReviews) => [response.data, ...prevReviews]);
       setIsPopupOpen(false);
       setReviewTitle("");
       setReviewContent("");
@@ -199,7 +235,17 @@ const ProductPage4 = () => {
     }
   };
 
-  const handleEditReview = async () => {
+  const handleEditReviewClick = (e, review) => {
+    e.stopPropagation(); // 클릭 이벤트가 부모에 전달되지 않도록
+    setReviewTitle(review.title);
+    setReviewContent(review.content);
+    setRating(review.rating);
+    setSelectedReview(review);
+    setIsEditMode(true);
+    setIsReviewPopupOpen(true); // 수정 팝업 열기
+  };
+
+  const handleSaveEdit = async () => {
     const updatedReviewData = {
       title: reviewTitle,
       content: reviewContent,
@@ -208,8 +254,11 @@ const ProductPage4 = () => {
 
     try {
       await axios.patch(
-        `http://localhost:8080/review/${productUid}/${selectedReview.id}`,
-        updatedReviewData
+        `http://localhost:8080/review/${productUid}`,
+        updatedReviewData,
+        {
+          withCredentials: true,
+        }
       );
       setReviews(
         reviews.map((review) =>
@@ -218,18 +267,30 @@ const ProductPage4 = () => {
             : review
         )
       );
-      setIsReviewPopupOpen(false);
+
+      setSelectedReview({
+        ...selectedReview,
+        ...updatedReviewData,
+      });
+
+      setIsEditMode(false);
     } catch (error) {
       console.error("Error:", error);
       alert("서버와 연결할 수 없습니다.");
     }
   };
 
+  const handleDeleteReviewClick = (e, review) => {
+    e.stopPropagation(); // 클릭 이벤트가 부모에 전달되지 않도록
+
+    if (window.confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
+      handleDeleteReview(review.id);
+    }
+  };
+
   const handleDeleteReview = async (reviewUid) => {
     try {
-      await axios.delete(
-        `http://localhost:8080/review/${productUid}/${reviewUid}`
-      );
+      await axios.delete(`http://localhost:8080/review/${productUid}`);
       setReviews(reviews.filter((review) => review.Uid !== reviewUid));
     } catch (error) {
       console.error("Error:", error);
@@ -266,7 +327,11 @@ const ProductPage4 = () => {
             <li onClick={() => navigate("/cart")}>
               <img src={cart_icon} alt="장바구니"></img>
             </li>
-            <li></li>
+            <li>
+              <button onClick={handleLoginLogout}>
+                {isLoggedIn ? "로그아웃" : "로그인"}
+              </button>
+            </li>
           </ul>
         </nav>
 
@@ -332,7 +397,11 @@ const ProductPage4 = () => {
                 </div>
                 <div className="review_title">{review.title}</div>
                 <div className="review_information">
-                  <p>{review.writeDate.split("T")[0].replaceAll("-", ".")}</p>
+                  <p>
+                    {review.writeDate
+                      ? review.writeDate.split("T")[0].replaceAll("-", ".")
+                      : "날짜 없음"}
+                  </p>
                   <div>{review.productDTO.img}</div>
                 </div>
               </div>
@@ -452,20 +521,97 @@ const ProductPage4 = () => {
       {isReviewPopupOpen && selectedReview && (
         <div className="popup">
           <div className="review_popup-content">
-            <div className="review_image"></div>
-            <div className="review_text">
-              <p className="review_title">{selectedReview.title}</p>
-              <div className="review_star">
-                {[...Array(selectedReview.rating)].map((_, i) => (
-                  <img key={i} src={star_icon} alt="별점" />
-                ))}
-                <p className="review_writer">{selectedReview.writer}</p>
-                <p className="review_date">{selectedReview.date}</p>
+            <div id="popup_box1">
+              <div className="review_image"></div>
+              <div className="review_text">
+                {isEditMode ? (
+                  <>
+                    <input
+                      type="text"
+                      value={reviewTitle}
+                      onChange={(e) => setReviewTitle(e.target.value)}
+                      placeholder="제목"
+                    />
+                    <div>
+                      {[...Array(5)].map((_, index) => (
+                        <img
+                          key={index}
+                          src={star_icon}
+                          alt="별점"
+                          onClick={() => handleStarClick(index)}
+                          style={{
+                            cursor: "pointer",
+                            opacity: index < rating ? 1 : 0.5, // 클릭된 별은 진하게, 나머지는 흐리게
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <textarea
+                      value={reviewContent}
+                      onChange={(e) => setReviewContent(e.target.value)}
+                      placeholder="내용"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <p className="review_title">{selectedReview.title}</p>
+                    <div className="review_star">
+                      {[...Array(selectedReview.rating)].map((_, i) => (
+                        <img key={i} src={star_icon} alt="별점" />
+                      ))}
+                      <p className="review_writer">
+                        {maskId(selectedReview.userDTO?.id)}
+                      </p>
+                      <p className="review_date">
+                        {selectedReview.writeDate
+                          .split("T")[0]
+                          .replaceAll("-", ".")}
+                      </p>
+                    </div>
+                    <p className="review_content">{selectedReview.content}</p>
+                  </>
+                )}
               </div>
-              <p className="review_content">{selectedReview.content}</p>
             </div>
+            <div id="popup_buttons">
+              {isEditMode ? (
+                <>
+                  <button onClick={handleSaveEdit} className="save_button">
+                    저장
+                  </button>
+                  <button
+                    onClick={() => setIsEditMode(false)}
+                    className="cancel_button"
+                  >
+                    취소
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsEditMode(true);
+                      // 기존 데이터를 수정 폼에 채워 넣기
+                      setReviewTitle(selectedReview.title);
+                      setReviewContent(selectedReview.content);
+                      setRating(selectedReview.rating);
+                    }}
+                    className="edit_button"
+                  >
+                    수정
+                  </button>
+                  <button
+                    onClick={(e) => handleDeleteReviewClick(e, selectedReview)}
+                    className="delete_button"
+                  >
+                    삭제
+                  </button>
+                </>
+              )}
+            </div>{" "}
             <button onClick={closeReviewPopup} className="close_button">
-              닫기
+              X
             </button>
           </div>
         </div>

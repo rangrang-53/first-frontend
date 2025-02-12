@@ -1,6 +1,6 @@
 @import "../assets/fonts/fonts.css";
 
 div {
-  font-family: "NotoSansKR", sans-serif;
-  font-family: "Poppins", sans-serif;
+  font-family: "NotoSansKR", "sans-serif";
+  font-family: "Poppins", "sans-serif";
 }

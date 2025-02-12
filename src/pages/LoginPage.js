@@ -1,14 +1,45 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import cart_icon from "../assets/icons/Bag_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
+import { useAuth } from "../context/AuthContext.js";
 import "../styles/Login.css";
 import "../styles/reset.css";
 
 const LoginPage = () => {
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsLoggedIn(true); // 토큰이 있으면 로그인 상태
+    } else {
+      setIsLoggedIn(false); // 토큰이 없으면 로그아웃 상태
+    }
+  };
+
+  const handleLoginLogout = async () => {
+    if (isLoggedIn) {
+      await axios.post(
+        "http://localhost:8080/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      localStorage.removeItem("authToken");
+      setIsLoggedIn(false);
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  };
 
   const [loginData, setLoginData] = useState({ id: "", password: "" });
   const [signupData, setSignupData] = useState({
@@ -35,7 +66,11 @@ const LoginPage = () => {
         { withCredentials: true }
       );
       console.log("로그인 성공!", response);
-      localStorage.setItem("authToken", "loggedIn");
+
+      const { token } = response.data;
+      localStorage.setItem("authToken", token); // 실제 토큰 저장
+      setIsLoggedIn(true); // AuthContext에서 로그인 상태 변경
+
       navigate("/"); // 로그인 후 메인 페이지로 이동
     } catch (error) {
       console.error("로그인 실패", error);
@@ -108,7 +143,11 @@ const LoginPage = () => {
                 <img src={cart_icon} alt="장바구니"></img>
               </Link>
             </li>
-            <li></li>
+            <li>
+              <button onClick={handleLoginLogout}>
+                {isLoggedIn ? "로그아웃" : "로그인"}
+              </button>
+            </li>
           </ul>
         </nav>
         <div id="loginPage_container">
@@ -132,7 +171,9 @@ const LoginPage = () => {
             </div>
             <div className="buttons">
               <button>취소</button>
-              <button onClick={handleLogin}>확인</button>
+              <button id="ok" onClick={handleLogin}>
+                확인
+              </button>
             </div>
           </div>
 
@@ -170,7 +211,10 @@ const LoginPage = () => {
             </div>
             <div className="buttons">
               <button>취소</button>
-              <button onClick={() => setLoginData({ id: "", password: "" })}>
+              <button
+                id="ok"
+                onClick={() => setLoginData({ id: "", password: "" })}
+              >
                 확인
               </button>
             </div>

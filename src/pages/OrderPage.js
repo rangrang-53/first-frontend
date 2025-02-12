@@ -1,13 +1,56 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import cart_icon from "../assets/icons/Bag_alt_light.png";
 import login_icon from "../assets/icons/User_alt_light.png";
 import logo from "../assets/images/change.png";
+import { useAuth } from "../context/AuthContext.js";
 import "../styles/Order.css";
 import "../styles/reset.css";
 
 const OrderPage = () => {
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
+      }
+
+      const response = await axios.get("http://localhost:8080/check-login", {
+        withCredentials: true,
+      });
+
+      setIsLoggedIn(response.data.isAuthenticated); // 서버 응답 구조에 맞게 수정 필요
+    } catch (error) {
+      setIsLoggedIn(false);
+    }
+  };
+
+  const handleLoginLogout = async () => {
+    if (isLoggedIn) {
+      await axios.post(
+        "http://localhost:8080/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      localStorage.removeItem("authToken");
+      setIsLoggedIn(false);
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <>
       <header>
@@ -37,7 +80,11 @@ const OrderPage = () => {
             <li onClick={() => navigate("/cart")}>
               <img src={cart_icon} alt="장바구니"></img>
             </li>
-            <li></li>
+            <li>
+              <button onClick={handleLoginLogout}>
+                {isLoggedIn ? "로그아웃" : "로그인"}
+              </button>
+            </li>
           </ul>
         </nav>
 
@@ -71,33 +118,52 @@ const OrderPage = () => {
         </ul>
 
         <div id="orderPage_container2">
-          <div className="orderPage_container2_box"><p className="title">배송 정보</p>
-          <div className="box">
-            <p>홍길동</p>
-            <p>010-1234-5678</p>
-            <p>서울시 강동구 천호동 12-123</p>
-          </div></div>
-          
-          <div className="orderPage_container2_box"><p className="title">결제 정보</p>
-          <div className="box">
-            <div className="inputs"><input type="radio" id="cardPayment" name="payment"></input>
-            <label for="cardPayment">카드 결제</label></div>
-            <div className="inputs"><input type="radio" id="easyPayment" name="payment"></input>
-            <label for="easyPayment">간편 결제</label></div>
-            <div className="inputs"><input type="radio" id="bankPayment" name="payment"></input>
-            <label for="bankPayment">무통장 입금</label></div>
-            
+          <div className="orderPage_container2_box">
+            <p className="title">배송 정보</p>
+            <div className="box">
+              <p>홍길동</p>
+              <p>010-1234-5678</p>
+              <p>서울시 강동구 천호동 12-123</p>
+            </div>
           </div>
-        </div></div>
-          
-          <div id = "agree_container"><p className="title">개인정보 제공 동의</p>
-        <div id = "agree1"><input type = "radio" id ="personalInformation"></input>
-        <label for = "personalInformation">주문 내역을 확인했으며 결제에 동의합니다.</label>
-        <span>자세히</span></div>
-        
-        <div id="agree2"><input type="radio" id = "lastAgree"></input>
-        <label for = "lastAgree">클로씨는 통신판매중개자로, 업체 배송 상품의 상품/상품정보/거래 등에 대한 책임은 클로씨가 아닌 판매자에게 있습니다.</label></div></div>
-        
+
+          <div className="orderPage_container2_box">
+            <p className="title">결제 정보</p>
+            <div className="box">
+              <div className="inputs">
+                <input type="radio" id="cardPayment" name="payment"></input>
+                <label for="cardPayment">카드 결제</label>
+              </div>
+              <div className="inputs">
+                <input type="radio" id="easyPayment" name="payment"></input>
+                <label for="easyPayment">간편 결제</label>
+              </div>
+              <div className="inputs">
+                <input type="radio" id="bankPayment" name="payment"></input>
+                <label for="bankPayment">무통장 입금</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="agree_container">
+          <p className="title">개인정보 제공 동의</p>
+          <div id="agree1">
+            <input type="radio" id="personalInformation"></input>
+            <label for="personalInformation">
+              주문 내역을 확인했으며 결제에 동의합니다.
+            </label>
+            <span>자세히</span>
+          </div>
+
+          <div id="agree2">
+            <input type="radio" id="lastAgree"></input>
+            <label for="lastAgree">
+              클로씨는 통신판매중개자로, 업체 배송 상품의 상품/상품정보/거래
+              등에 대한 책임은 클로씨가 아닌 판매자에게 있습니다.
+            </label>
+          </div>
+        </div>
 
         <div id="buttons">
           <button>취소하기</button>

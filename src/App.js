@@ -1,4 +1,7 @@
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext.js";
+
 import BrandPage from "./pages/BrandPage.js";
 import CartPage from "./pages/CartPage.js";
 import EventPage from "./pages/EventPage.js";
@@ -10,7 +13,13 @@ import ProductPage4QnA from "./pages/ProductPage4QnA.js";
 import SignupPage from "./pages/SignupPage.js";
 import "./styles/App.css";
 
-function App() {
+const AppContent = () => {
+  const { checkLoginStatus } = useAuth();
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, [checkLoginStatus]);
+
   return (
     <Routes>
       <Route path="/" element={<HomePage />}></Route>
@@ -27,6 +36,14 @@ function App() {
       ></Route>
     </Routes>
   );
-}
+};
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+};
 
 export default App;
