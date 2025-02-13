@@ -11,14 +11,16 @@ import "../styles/reset.css";
 
 const ProductPage4 = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, userUid } = useAuth();
 
   const [isReviewButtonDisabled, setIsReviewButtonDisabled] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [loadingReviews, setLoadingReviews] = useState(true);
 
   const maskId = (id) => {
-    if (!id || id.length < 4) return "****";
-    return id.substring(0, 4) + "*".repeat(id.length - 4);
+    const str = id.toString();
+    if (str.length < 4) return "****";
+    return str.substring(0, 4) + "*".repeat(str.length - 4);
   };
 
   useEffect(() => {
@@ -87,8 +89,6 @@ const ProductPage4 = () => {
   const [totalPages, setTotalPages] = useState(1);
   const reviewsPerPage = 10;
 
-  const [userUid, setUserUid] = useState(null);
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -125,6 +125,13 @@ const ProductPage4 = () => {
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString();
   const togglePopup = () => {
+    if (!isPopupOpen) {
+      setReviewTitle("");
+      setReviewContent("");
+      setRating(0);
+      setReviewImage(null);
+    }
+
     setIsPopupOpen(!isPopupOpen);
     setIsEditMode(false);
     setSelectedReview(null); // 팝업 상태 토글
@@ -157,6 +164,7 @@ const ProductPage4 = () => {
         `http://localhost:8080/review/${productUid}`,
         {
           params: { page: page, size: reviewsPerPage },
+          withCredentials: true,
         }
       );
       console.log(response.data);
@@ -166,6 +174,8 @@ const ProductPage4 = () => {
     } catch (error) {
       console.error("Error:", error);
       alert("서버와 연결할 수 없습니다.");
+    } finally {
+      setLoadingReviews(false);
     }
   };
 
@@ -221,9 +231,8 @@ const ProductPage4 = () => {
         }
       );
 
-      response.data.writeDate = new Date().toISOString();
+      await fetchReviews(currentPage);
 
-      setReviews((prevReviews) => [response.data, ...prevReviews]);
       setIsPopupOpen(false);
       setReviewTitle("");
       setReviewContent("");
@@ -254,7 +263,7 @@ const ProductPage4 = () => {
 
     try {
       await axios.patch(
-        `http://localhost:8080/review/${productUid}`,
+        `http://localhost:8080/review/${productUid}/${selectedReview.uid}`,
         updatedReviewData,
         {
           withCredentials: true,
@@ -262,7 +271,7 @@ const ProductPage4 = () => {
       );
       setReviews(
         reviews.map((review) =>
-          review.id === selectedReview.id
+          review.uid === selectedReview.uid
             ? { ...review, ...updatedReviewData }
             : review
         )
@@ -280,18 +289,22 @@ const ProductPage4 = () => {
     }
   };
 
-  const handleDeleteReviewClick = (e, review) => {
+  const handleDeleteReviewClick = (e) => {
     e.stopPropagation(); // 클릭 이벤트가 부모에 전달되지 않도록
 
     if (window.confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
-      handleDeleteReview(review.id);
+      handleDeleteReview();
     }
   };
 
-  const handleDeleteReview = async (reviewUid) => {
+  const handleDeleteReview = async () => {
     try {
-      await axios.delete(`http://localhost:8080/review/${productUid}`);
-      setReviews(reviews.filter((review) => review.Uid !== reviewUid));
+      await axios.delete(
+        `http://localhost:8080/review/${productUid}/${selectedReview.uid}`,
+        { withCredentials: true }
+      );
+      setReviews(reviews.filter((review) => review.uid !== selectedReview.uid));
+      setSelectedReview(null);
     } catch (error) {
       console.error("Error:", error);
       alert("서버와 연결할 수 없습니다.");
@@ -329,7 +342,7 @@ const ProductPage4 = () => {
             </li>
             <li>
               <button onClick={handleLoginLogout}>
-                {isLoggedIn ? "로그아웃" : "로그인"}
+                {isLoggedIn ? "LOGOUT" : "LOGIN"}
               </button>
             </li>
           </ul>
@@ -383,7 +396,7 @@ const ProductPage4 = () => {
         </div>
 
         <div id="review_container">
-          {reviews && reviews.length > 0 ? (
+          {loadingReviews ? null : reviews && reviews.length > 0 ? (
             reviews.map((review) => (
               <div
                 className="review"
@@ -587,27 +600,31 @@ const ProductPage4 = () => {
                   </button>
                 </>
               ) : (
-                <>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsEditMode(true);
-                      // 기존 데이터를 수정 폼에 채워 넣기
-                      setReviewTitle(selectedReview.title);
-                      setReviewContent(selectedReview.content);
-                      setRating(selectedReview.rating);
-                    }}
-                    className="edit_button"
-                  >
-                    수정
-                  </button>
-                  <button
-                    onClick={(e) => handleDeleteReviewClick(e, selectedReview)}
-                    className="delete_button"
-                  >
-                    삭제
-                  </button>
-                </>
+                selectedReview.userDTO.uid === userUid && (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsEditMode(true);
+                        // 기존 데이터를 수정 폼에 채워 넣기
+                        setReviewTitle(selectedReview.title);
+                        setReviewContent(selectedReview.content);
+                        setRating(selectedReview.rating);
+                      }}
+                      className="edit_button"
+                    >
+                      수정
+                    </button>
+                    <button
+                      onClick={(e) =>
+                        handleDeleteReviewClick(e, selectedReview)
+                      }
+                      className="delete_button"
+                    >
+                      삭제
+                    </button>
+                  </>
+                )
               )}
             </div>{" "}
             <button onClick={closeReviewPopup} className="close_button">

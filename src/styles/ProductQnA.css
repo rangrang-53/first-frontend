@@ -263,13 +263,14 @@ main > #buttons > input:nth-child(1) {
 
 /* buttons end */
 
-main > #qna_header {
+main > #qa_header {
   display: flex;
   gap: 24px;
   margin-top: 80px;
+  margin-bottom: 30px;
 }
 
-main > #qna_header > p {
+main > #qa_header > p {
   font-family: "NotoSansKR";
   line-height: 20px;
   font-size: 28px;
@@ -278,15 +279,8 @@ main > #qna_header > p {
   cursor: pointer;
 }
 
-main > #qna_header > p:nth-child(1) {
+main > #qa_header > p:nth-child(1) {
   color: #d9d9d9;
-}
-
-main > #qna_container {
-  display: flex;
-  flex-direction: column;
-  margin-top: 21px;
-  position: relative;
 }
 
 main > #qna_container > .qna_item {
@@ -636,4 +630,119 @@ main > #page > .pageNumber {
 
 .pageNumber:hover {
   background-color: #f0f0f0;
+}
+
+/* 수정 창*/
+
+.qna_buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.qna_buttons > button:nth-child(1),
+.qna_buttons > button:nth-child(2) {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 60px;
+  height: 30px;
+}
+
+.qna_buttons > button:nth-child(1) {
+  background-color: rgba(140, 206, 243, 0.7);
+}
+
+.qna_buttons > button:nth-child(1):hover {
+  background-color: #71c4ef;
+}
+
+.qna_buttons > button:nth-child(2) {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.qna_buttons > button:nth-child(2):hover {
+  background-color: #e0e0e0;
+}
+
+#edit_box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  font-family: "NotoSansKR", "serif";
+}
+
+#edit_box > input[type="text"] {
+  font-family: "NotoSansKR";
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  outline: none;
+  border: none;
+  border-bottom: 1px #ccc solid;
+  color: #333;
+}
+
+#edit_box2 {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: 280px;
+}
+
+#edit_box2 > select {
+  width: 155px;
+  height: 37px;
+  outline: none;
+  color: #5f5f5f;
+  border-radius: 2px;
+  font-family: "NotoSansKR";
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  border: none;
+}
+
+#edit_box2 > input[type="password"] {
+  width: 155px;
+  height: 37px;
+  outline: none;
+  color: #5f5f5f;
+  border-radius: 2px;
+  font-family: "NotoSansKR";
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  border: none;
+  border-bottom: 1px #ccc solid;
+}
+
+#edit_text {
+  width: 600px;
+  font-family: "NotoSansKR", "serif";
+  line-height: 20px;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  font-weight: 400;
+  outline: none;
+  color: #333;
+}
+
+#qa_content {
+  font-family: "NotoSansKR", "serif";
+  font-size: 16px;
+  text-align: center;
+  font-weight: 400;
 }

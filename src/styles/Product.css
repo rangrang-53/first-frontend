@@ -299,6 +299,12 @@ main > #review_container > .review {
   height: 100px;
   cursor: pointer;
   border-bottom: 1px #5f5f5f solid;
+  transition: transform 0.2 ease-in-out;
+}
+
+main > #review_container > .review:hover {
+  transform: scale(1.05);
+  background-color: rgba(140, 206, 243, 0.2);
 }
 
 main > #review_container > .review > .review_star {
@@ -556,10 +562,19 @@ main > #review_container > button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .edit_button {
   background: rgba(140, 206, 243, 0.7);
+}
+
+.edit_button:hover {
+  background: rgba(140, 206, 243, 0.9);
+}
+
+.delete_button:hover {
+  background-color: #ddd;
 }
 
 .close_button {
@@ -622,4 +637,64 @@ main > #page > .pageNumber {
 
 .pageNumber:hover {
   background-color: #f0f0f0;
+}
+
+/* after */
+
+/* 리뷰 수정 팝업 스타일링 예시 */
+.review_popup-content input[type="text"] {
+  width: 600px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 18px;
+  box-sizing: border-box;
+  margin-bottom: 40px;
+  font-family: "NotoSansKR", "serif";
+}
+
+.review_popup-content textarea {
+  width: 100%;
+  height: 200px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+  resize: vertical;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  font-family: "NotoSansKR", "serif";
+}
+
+.review_popup-content .save_button,
+.review_popup-content .cancel_button {
+  width: 100px;
+  height: 50px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* 저장 버튼 스타일 */
+.review_popup-content .save_button {
+  background-color: #8ccef3;
+}
+
+/* 저장 버튼 hover 효과 */
+.review_popup-content .save_button:hover {
+  background-color: #71c4ef;
+}
+
+/* 취소 버튼 스타일 */
+.review_popup-content .cancel_button {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+/* 취소 버튼 hover 효과 */
+.review_popup-content .cancel_button:hover {
+  background-color: #e0e0e0;
 }

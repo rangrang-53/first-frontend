@@ -82,12 +82,10 @@ const HomePage = () => {
 
     // 정각 이전이면 한 시간 전 값 사용
     if (minutes < 40) {
-      hours -= 1;
+      return `${String(hours - 1).padStart(2, "0")}30`;
+    } else {
+      return `${String(hours).padStart(2, "0")}00`; // 현재 시간 00분 데이터 요청
     }
-
-    // 시각을 두 자리 문자열로 변환 (예: 9 → "09", 13 → "13")
-    const baseTime = `${String(hours).padStart(2, "0")}30`;
-    return baseTime;
   }
 
   const getWeather = useCallback(async (lat, lon) => {
@@ -96,41 +94,47 @@ const HomePage = () => {
       "QL99OvgowvipV6jjgv1NoKwE8GMJnbROjRN0%2BxGQJz0497ViPFxnd04lXqgSskbJMcFoGhZGQeidvVCJYOY9Jg%3D%3D";
     const date = new Date();
     const baseDate = date.toISOString().split("T")[0].replace(/-/g, ""); // YYYYMMDD 형식
-    const baseTime = `${String(date.getHours()).padStart(2, "0")}00`; // HH00 형식
+    let baseTime = getBaseTime();
 
-    const url = `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=${apiKey}&numOfRows=10&pageNo=1&dataType=JSON&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
+    const fetchWeatherData = async (retryCount = 0) => {
+      const url = `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=${apiKey}&numOfRows=10&pageNo=1&dataType=JSON&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
 
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
 
-      if (data.response && data.response.body && data.response.body.items) {
-        const items = data.response.body.items.item;
+        if (data.response?.body?.items?.item?.length > 0) {
+          const items = data.response.body.items.item;
+          const tempData = items.find((i) => i.category === "T1H");
+          const ptyData = items.find((i) => i.category === "PTY");
 
-        const tempData = items.find((i) => i.category === "T1H");
-        const ptyData = items.find((i) => i.category === "PTY");
+          setWeather(tempData ? `${tempData.obsrValue}°C` : "온도 정보 없음");
 
-        if (tempData && tempData.obsrValue) {
-          setWeather(tempData.obsrValue + "°C");
+          if (ptyData) {
+            const { status, image } = getPrecipitationType(ptyData.obsrValue);
+            setWeatherStatus(status);
+            setWeatherImage(image);
+          } else {
+            setWeatherStatus("강수 상태 없음");
+          }
+        } else if (retryCount < 2) {
+          // 데이터가 없으면 한 시간 전 데이터로 재시도 (최대 2번)
+          const prevHour =
+            String(Number(baseTime.slice(0, 2)) - 1).padStart(2, "0") + "30";
+          baseTime = prevHour;
+          console.warn(`데이터 없음. 한 시간 전(${prevHour}) 데이터 재시도...`);
+          await fetchWeatherData(retryCount + 1);
         } else {
-          setWeather("온도 정보를 찾을 수 없습니다.");
+          console.error("날씨 데이터를 찾을 수 없습니다.");
+          setWeather("날씨 정보 없음");
+          setWeatherStatus("기상 상태를 불러올 수 없습니다.");
         }
-
-        if (ptyData && ptyData.obsrValue) {
-          const { status, image } = getPrecipitationType(ptyData.obsrValue); // 상태와 이미지 정보 반환
-          setWeatherStatus(status);
-          setWeatherImage(image);
-        } else {
-          setWeatherStatus("강수 상태 정보를 찾을 수 없습니다.");
-        }
-      } else {
-        console.error("응답 데이터에서 items를 찾을 수 없습니다.");
+      } catch (error) {
+        console.error("날씨 정보를 가져오는 중 오류 발생:", error);
       }
-    } catch (error) {
-      console.error("날씨 정보를 가져오는 중 오류 발생:", error);
-      setWeather("날씨 정보를 불러올 수 없습니다.");
-      setWeatherStatus("기상 상태를 불러올 수 없습니다.");
-    }
+    };
+
+    await fetchWeatherData();
   }, []);
 
   // 강수 형태를 해석하는 함수
@@ -235,7 +239,7 @@ const HomePage = () => {
             </li>
             <li>
               <button onClick={handleLoginLogout}>
-                {isLoggedIn ? "로그아웃" : "로그인"}
+                {isLoggedIn ? "LOGOUT" : "LOGIN"}
               </button>
             </li>
           </ul>

@@ -109,7 +109,7 @@ main > nav > #icon > li:nth-child(3) > button {
   outline: none;
   cursor: pointer;
   background-color: rgba(113, 196, 239, 0.2);
-  border: 1px rgba(0, 0, 0, 0.3) solid;
+  border: none;
   font-weight: 500;
   color: rgba(0, 0, 0, 0.8);
 }

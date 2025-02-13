@@ -82,7 +82,7 @@ const OrderPage = () => {
             </li>
             <li>
               <button onClick={handleLoginLogout}>
-                {isLoggedIn ? "로그아웃" : "로그인"}
+                {isLoggedIn ? "LOGOUT" : "LOGIN"}
               </button>
             </li>
           </ul>
