@@ -746,3 +746,8 @@ main > #page > .pageNumber {
   text-align: center;
   font-weight: 400;
 }
+
+.qna_item:hover {
+  transform: scale(1.05);
+  background-color: rgba(140, 206, 243, 0.2);
+}
